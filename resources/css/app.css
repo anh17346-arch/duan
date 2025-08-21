@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .glass {
+    @apply bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl;
+  }
+  
+  .shadow-soft {
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+}
+
+@layer utilities {
+  /* Bỏ spin buttons cho tất cả input số */
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+  
+  /* Custom dropdown styling */
+  select {
+    background-image: none !important;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Dropdown container styling */
+  select:focus {
+    outline: none;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+  
+  /* Dropdown list styling */
+  select:not([size]) {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+  
+  .dark select:not([size]) {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    border: 2px solid #475569 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Modern dropdown options */
+  select option {
+    padding: 16px 20px !important;
+    margin: 4px 8px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  /* Dark mode options */
+  .dark select option {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    border: 1px solid #475569 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    color: #f1f5f9 !important;
+  }
+  
+  select option:hover {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    border-color: #3b82f6 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25) !important;
+  }
+  
+  .dark select option:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
+    border-color: #60a5fa !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+  }
+  
+  select option:checked {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    color: white !important;
+    border-color: #1d4ed8 !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+  }
+  
+  /* Custom scrollbar for dropdown */
+  select::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  select::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  
+  select::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+    border-radius: 4px;
+  }
+  
+  select::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+  }
+  
+  .dark select::-webkit-scrollbar-track {
+    background: #334155;
+  }
+  
+  .dark select::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+  }
+  
+  .dark select::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+  }
+}
