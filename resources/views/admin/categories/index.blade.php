@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title', __('app.manage_categories') . ' - Perfume Luxury')
 
 @section('content')
@@ -23,38 +22,54 @@
     <div class="absolute inset-0 bg-[linear-gradient(rgba(100,116,139,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(100,116,139,0.03)_1px,transparent_1px)] bg-[size:64px_64px] dark:bg-[linear-gradient(rgba(148,163,184,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.02)_1px,transparent_1px)]"></div>
   </div>
 
-<div class="relative max-w-6xl mx-auto px-4 py-8">
-  <!-- Back Button -->
-  <div class="mb-6">
-      <a href="{{ route('admin.dashboard') }}" 
-         class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 rounded-xl hover:from-slate-200 hover:to-slate-300 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl font-semibold">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
-          </svg>
-          {{ __('app.back') }}
-      </a>
-  </div>
-
+<div class="relative max-w-7xl mx-auto px-4 py-8">
+  <!-- Header -->
   <div class="flex items-center justify-between mb-8">
     <div>
       <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ __('app.manage_categories') }}</h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-2">{{ __('app.manage_all_categories') }}</p>
+      <p class="text-slate-600 dark:text-slate-400 mt-2">
+        @if(app()->getLocale() === 'en')
+          Manage all categories in the system
+        @else
+          Quản lý tất cả danh mục trong hệ thống
+        @endif
+      </p>
     </div>
+    
     <div class="flex items-center gap-4">
+      <a href="{{ route('admin.dashboard') }}" 
+         class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        {{ __('app.dashboard') }}
+      </a>
+      
       <a href="{{ route('admin.categories.create') }}" 
-         class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold transition-colors">
-        + {{ __('app.add_new_category') }}
+         class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-lg hover:from-emerald-600 hover:to-green-600 transition-all duration-300 font-semibold">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        {{ __('app.add_new_category') }}
       </a>
     </div>
   </div>
 
+  <!-- Flash Messages -->
+  @if (session('success'))
+    <div class="mb-6 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3">
+      {{ session('success') }}
+    </div>
+  @endif
+
   <!-- Search and Filters -->
-  <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-700 mb-6">
+  <div class="bg-white/20 dark:bg-white/5 rounded-2xl p-6 shadow-lg border border-white/30 dark:border-white/10 mb-8">
     <form method="GET" class="flex items-center gap-4">
       <div class="flex-1">
         <input name="kw" value="{{ request('kw') }}"
-               class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-               placeholder="{{ __('app.search_by_name_brand') }}" />
+               placeholder="{{ __('app.search_by_name_brand') }}"
+               class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:border-transparent">
       </div>
       <button type="submit" class="px-6 py-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors">
         {{ __('app.search') }}
@@ -67,97 +82,151 @@
     </form>
   </div>
 
-  <!-- Categories Table -->
-  <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/60 dark:border-slate-700 overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead class="bg-slate-50 dark:bg-slate-700/50">
-          <tr>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">ID</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">{{ __('app.category_name') }}</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">{{ __('app.description') }}</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">{{ __('app.status') }}</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">{{ __('app.products_count') }}</th>
-            <th class="text-right px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">{{ __('app.actions') }}</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-          @forelse($categories as $category)
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-400">{{ $category->id }}</td>
-              <td class="px-6 py-4">
-                <div class="font-medium text-slate-900 dark:text-slate-100">{{ $category->display_name }}</div>
-                @if($category->name_en && app()->getLocale() === 'vi')
-                  <div class="text-sm text-blue-600 dark:text-blue-400">{{ $category->name_en }}</div>
-                @endif
-                @if($category->slug)
-                  <div class="text-xs text-slate-500 dark:text-slate-400">{{ $category->slug }}</div>
-                @endif
-              </td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-400">
-                <div>{{ Str::limit($category->description, 30) ?: __('app.no_description') }}</div>
-                @if($category->description_en)
-                  <div class="text-sm text-blue-600 dark:text-blue-400">{{ Str::limit($category->description_en, 30) }}</div>
-                @endif
-              </td>
-              <td class="px-6 py-4">
-                @if($category->status)
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
-                    {{ __('app.active') }}
-                  </span>
-                @else
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">
-                    {{ __('app.hidden') }}
-                  </span>
-                @endif
-              </td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-400">
-                {{ $category->products_count ?? 0 }}
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2 justify-end">
-                  <a href="{{ route('categories.show', $category) }}" 
-                     class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                    {{ __('app.view') }}
-                  </a>
-                  <a href="{{ route('admin.categories.edit', $category) }}" 
-                     class="px-3 py-1.5 text-sm rounded-lg border border-amber-300 dark:border-amber-600 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors">
-                    {{ __('app.edit') }}
-                  </a>
-                  <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" 
-                        onsubmit="return confirm('{{ __('app.confirm_delete_category') }}')" class="inline">
-                    @csrf @method('DELETE')
-                    <button type="submit" 
-                            class="px-3 py-1.5 text-sm rounded-lg border border-rose-300 dark:border-rose-600 text-rose-700 dark:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">
-                      {{ __('app.delete') }}
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          @empty
+  <!-- Categories List -->
+  <div class="bg-white/20 dark:bg-white/5 rounded-2xl shadow-lg border border-white/30 dark:border-white/10 overflow-hidden">
+    @if($categories->count() > 0)
+      <div class="overflow-x-auto">
+        <table class="w-full category-table">
+          <thead class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-700/50">
             <tr>
-              <td colspan="6" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                <div class="flex flex-col items-center gap-3">
-                  <svg class="w-12 h-12 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                  </svg>
-                  <div>
-                    <p class="font-medium">{{ __('app.no_categories_yet') }}</p>
-                    <p class="text-sm">{{ __('app.start_by_creating_first_category') }}</p>
-                  </div>
-                </div>
-              </td>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.category') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.description') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.status') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.products_count') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.created') }}
+              </th>
+              <th class="px-6 py-4 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.actions') }}
+              </th>
             </tr>
-          @endforelse
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    @if ($categories->hasPages())
+          </thead>
+          <tbody class="divide-y divide-slate-100/50 dark:divide-slate-700/30">
+            @foreach($categories as $category)
+              <tr class="category-table-row group hover:bg-slate-50/60 dark:hover:bg-slate-700/30 transition-all duration-300 ease-out relative border-b border-slate-100/50 dark:border-slate-700/30">
+                <td class="px-6 py-4 relative z-10">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-12 w-12">
+                      <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 flex items-center justify-center shadow-sm category-icon ring-1 ring-slate-200/50 dark:ring-slate-600/30">
+                        <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="category-name text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors">
+                        {{ $category->display_name }}
+                      </div>
+                      @if($category->name_en && app()->getLocale() === 'vi')
+                        <div class="text-sm font-medium text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                          {{ $category->name_en }}
+                        </div>
+                      @endif
+                      @if($category->slug)
+                        <div class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors">
+                          {{ $category->slug }}
+                        </div>
+                      @endif
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 relative z-10">
+                  <div class="text-sm text-slate-900 dark:text-slate-100 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors">
+                    {{ Str::limit($category->description, 50) ?: __('app.no_description') }}
+                  </div>
+                  @if($category->description_en)
+                    <div class="text-sm text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                      {{ Str::limit($category->description_en, 50) }}
+                    </div>
+                  @endif
+                </td>
+                <td class="px-6 py-4 relative z-10">
+                  @if($category->status)
+                    <span class="category-status active inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 dark:from-green-900/30 dark:to-emerald-900/30 dark:text-green-300 group-hover:from-green-200 group-hover:to-emerald-200 dark:group-hover:from-green-900/40 dark:group-hover:to-emerald-900/40 transition-all duration-200 ease-out shadow-sm">
+                      {{ __('app.active') }}
+                    </span>
+                  @else
+                    <span class="category-status inactive inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-red-100 to-pink-100 text-red-800 dark:from-red-900/30 dark:to-pink-900/30 dark:text-red-300 group-hover:from-red-200 group-hover:to-pink-200 dark:group-hover:from-red-900/40 dark:group-hover:to-pink-900/40 transition-all duration-200 ease-out shadow-sm">
+                      {{ __('app.hidden') }}
+                    </span>
+                  @endif
+                </td>
+                <td class="px-6 py-4 relative z-10">
+                  <div class="text-sm text-slate-900 dark:text-slate-100 font-mono group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100/80 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 group-hover:bg-blue-200/80 dark:group-hover:bg-blue-900/40 transition-all duration-200 ease-out shadow-sm">
+                      {{ $category->products_count ?? 0 }} {{ __('app.products') }}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400 relative z-10 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors category-date">
+                  {{ $category->created_at ? $category->created_at->format('d/m/Y') : '-' }}
+                </td>
+                <td class="px-6 py-4 text-right text-sm font-medium relative z-10">
+                  <div class="action-buttons flex items-center justify-end gap-2">
+                    <a href="{{ route('categories.show', $category) }}" 
+                       class="action-button text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-all duration-200 ease-out p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:scale-105"
+                       title="{{ __('app.view') }}">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                    </a>
+                    <a href="{{ route('admin.categories.edit', $category) }}" 
+                       class="action-button text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-all duration-200 ease-out p-1 rounded hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:scale-105"
+                       title="{{ __('app.edit') }}">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    </a>
+                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('app.confirm_delete_category') }}')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" 
+                              class="action-button text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-all duration-200 ease-out p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:scale-105"
+                              title="{{ __('app.delete') }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
       <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700">
-        {{ $categories->onEachSide(1)->links() }}
+        {{ $categories->links() }}
+      </div>
+    @else
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-slate-900 dark:text-slate-100">{{ __('app.no_categories_yet') }}</h3>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {{ __('app.start_by_creating_first_category') }}
+        </p>
+        <div class="mt-6">
+          <a href="{{ route('admin.categories.create') }}" 
+             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            {{ __('app.add_new_category') }}
+          </a>
+        </div>
       </div>
     @endif
   </div>
