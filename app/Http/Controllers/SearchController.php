@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\PromotionService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -33,7 +34,8 @@ class SearchController extends Controller
             'filters_applied' => count(array_filter($filters))
         ];
         
-        return view('search.index', compact('products', 'categories', 'brands', 'searchStats'));
+        $promotionService = new PromotionService();
+        return view('search.index', compact('products', 'categories', 'brands', 'searchStats', 'promotionService'));
     }
 
     /**
@@ -101,7 +103,8 @@ class SearchController extends Controller
         $products = $query->paginate(16)->withQueryString();
         $categories = Category::orderBy('name')->get();
         
-        return view('search.brand', compact('products', 'categories', 'brand'));
+        $promotionService = new PromotionService();
+        return view('search.brand', compact('products', 'categories', 'brand', 'promotionService'));
     }
 
     /**
@@ -143,7 +146,8 @@ class SearchController extends Controller
         // Lấy danh sách thương hiệu trong danh mục này
         $brands = $category->products()->active()->distinct()->pluck('brand')->filter()->sort()->values();
         
-        return view('search.category', compact('category', 'products', 'brands'));
+        $promotionService = new PromotionService();
+        return view('search.category', compact('category', 'products', 'brands', 'promotionService'));
     }
 
     /**
@@ -151,8 +155,9 @@ class SearchController extends Controller
      */
     public function onSale(Request $request): View
     {
-        $products = Product::with(['category'])
-            ->onSale()
+        $promotionService = new PromotionService();
+        $products = $promotionService->getProductsWithActivePromotions()
+            ->with(['category'])
             ->active()
             ->latest()
             ->paginate(16);
@@ -164,6 +169,6 @@ class SearchController extends Controller
             'sale_percentage' => $products->total() > 0 ? round(($products->total() / Product::active()->count()) * 100, 1) : 0
         ];
         
-        return view('search.on-sale', compact('products', 'stats'));
+        return view('search.on-sale', compact('products', 'stats', 'promotionService'));
     }
 }

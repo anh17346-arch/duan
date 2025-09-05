@@ -27,6 +27,15 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products', 'q'));
     }
 
+    public function list(Request $request): View
+    {
+        $q = trim($request->get('q', ''));
+        $query = $this->buildSearchQuery($request);
+        $products = $query->paginate(self::PRODUCTS_PER_PAGE)->withQueryString();
+
+        return view('admin.products.list', compact('products', 'q'));
+    }
+
     public function create(): View
     {
         $product = new Product();
@@ -45,7 +54,6 @@ class ProductController extends Controller
         
         // Xử lý các trường boolean
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['is_on_sale'] = $request->boolean('is_on_sale');
         $data['is_best_seller'] = $request->boolean('is_best_seller');
         $data['is_new'] = $request->boolean('is_new');
         
@@ -84,6 +92,14 @@ class ProductController extends Controller
         }
         
         $product = Product::create($data);
+
+        // Xử lý categories (nhiều-nhiều)
+        if ($request->has('category_ids') && is_array($request->category_ids)) {
+            $product->categories()->attach($request->category_ids);
+        }
+        
+        // Tự động gán sản phẩm vào danh mục phù hợp dựa trên gender
+        $this->autoAssignCategories($product);
         
         \Log::info('ProductController@store - Product created:', [
             'id' => $product->id,
@@ -144,7 +160,7 @@ class ProductController extends Controller
 
         // Redirect to edit page instead of index for better UX
         return redirect()->route('admin.products.edit', $product)
-            ->with('success', 'Đã tạo sản phẩm thành công.');
+            ->with('success', __('app.product_created_successfully'));
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->expectsJson() || $request->ajax()) {
@@ -175,8 +191,8 @@ class ProductController extends Controller
     {
         $categories = $this->getCategories();
         
-        // Eager load images relationship
-        $product->load('images');
+        // Eager load images and categories relationships
+        $product->load(['images', 'categories']);
         
         // Debug log
         \Log::info('ProductController@edit - Product loaded:', [
@@ -200,7 +216,6 @@ class ProductController extends Controller
         
         // Xử lý các trường boolean
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['is_on_sale'] = $request->boolean('is_on_sale');
         $data['is_best_seller'] = $request->boolean('is_best_seller');
         $data['is_new'] = $request->boolean('is_new');
         
@@ -243,6 +258,17 @@ class ProductController extends Controller
         }
         
         $product->update($data);
+
+        // Xử lý categories (nhiều-nhiều)
+        if ($request->has('category_ids')) {
+            $categoryIds = is_array($request->category_ids) ? $request->category_ids : [];
+            $product->categories()->sync($categoryIds);
+        } else {
+            $product->categories()->detach();
+        }
+        
+        // Tự động gán sản phẩm vào danh mục phù hợp dựa trên thuộc tính
+        $this->autoAssignCategories($product);
         
         \Log::info('ProductController@update - Product updated:', [
             'id' => $product->id,
@@ -293,7 +319,7 @@ class ProductController extends Controller
 
         // Stay on edit page for better UX
         return redirect()->route('admin.products.edit', $product)
-            ->with('success', 'Đã cập nhật sản phẩm thành công.');
+            ->with('success', __('app.product_updated_successfully'));
     }
 
     public function destroy(Product $product): RedirectResponse
@@ -301,12 +327,12 @@ class ProductController extends Controller
         $this->deleteOldImage($product->main_image);
         $product->delete();
 
-        return back()->with('success', 'Đã xoá sản phẩm thành công.');
+        return back()->with('success', __('app.product_deleted_successfully'));
     }
 
     private function buildSearchQuery(Request $request)
     {
-        $query = Product::with('category')->latest();
+        $query = Product::with('categories')->latest();
         
         $q = trim($request->get('q', ''));
         if ($q !== '') {
@@ -321,7 +347,7 @@ class ProductController extends Controller
 
     private function getCategories()
     {
-        return Category::orderBy('name')->pluck('name', 'id');
+        return Category::active()->orderBy('name')->get()->pluck('display_name', 'id');
     }
 
     private function prepareProductData(ProductRequest $request): array
@@ -341,6 +367,44 @@ class ProductController extends Controller
     {
         if ($imagePath && Storage::disk(self::IMAGE_DISK)->exists($imagePath)) {
             Storage::disk(self::IMAGE_DISK)->delete($imagePath);
+        }
+    }
+
+    private function autoAssignCategories(Product $product)
+    {
+        // Tự động gán sản phẩm vào danh mục phù hợp dựa trên gender và tên category
+        $categories = Category::all();
+        $assignedCategories = $product->categories->pluck('id')->toArray();
+
+        foreach ($categories as $category) {
+            $shouldAssign = false;
+            
+            // Kiểm tra dựa trên tên category và gender của product
+            if ($product->gender === 'male' && 
+                (stripos($category->name, 'nam') !== false || 
+                 stripos($category->name, 'male') !== false ||
+                 stripos($category->name_en, 'male') !== false)) {
+                $shouldAssign = true;
+            }
+            
+            if ($product->gender === 'female' && 
+                (stripos($category->name, 'nữ') !== false || 
+                 stripos($category->name, 'female') !== false ||
+                 stripos($category->name_en, 'female') !== false)) {
+                $shouldAssign = true;
+            }
+            
+            if ($product->gender === 'unisex' && 
+                (stripos($category->name, 'unisex') !== false || 
+                 stripos($category->name_en, 'unisex') !== false)) {
+                $shouldAssign = true;
+            }
+            
+            // Nếu nên gán và chưa được gán vào category này thì gán
+            if ($shouldAssign && !in_array($category->id, $assignedCategories)) {
+                $product->categories()->attach($category->id);
+                \Log::info("Auto-assigned product {$product->id} ({$product->gender}) to category {$category->id} ({$category->name})");
+            }
         }
     }
 }

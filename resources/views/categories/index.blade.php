@@ -216,6 +216,80 @@
       'titleColor' => 'text-blue-600 hover:text-blue-700'
     ])
   @endif
+
+  <!-- Danh mục sản phẩm -->
+  @if($categories->count() > 0)
+    <div class="relative">
+      <!-- Section Header -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+          </div>
+          <div class="text-left">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-slate-100">
+              @if(app()->getLocale() === 'en')
+                Product Categories
+              @else
+                Danh mục sản phẩm
+              @endif
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400">
+              @if(app()->getLocale() === 'en')
+                Explore our product categories
+              @else
+                Khám phá các danh mục sản phẩm của chúng tôi
+              @endif
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach($categories as $category)
+          <div class="group relative overflow-hidden rounded-2xl bg-white/20 dark:bg-white/5 backdrop-blur-sm border border-white/50 dark:border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-violet-100 dark:from-purple-900/30 dark:to-violet-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                  </svg>
+                </div>
+                <span class="text-sm font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
+                  {{ $category->products_count }} {{ app()->getLocale() === 'en' ? 'products' : 'sản phẩm' }}
+                </span>
+              </div>
+              
+              <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                {{ $category->display_name }}
+              </h3>
+              
+              @if($category->display_description)
+                <p class="text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">
+                  {{ Str::limit($category->display_description, 80) }}
+                </p>
+              @endif
+              
+              <a href="{{ route('categories.show', $category) }}" 
+                 class="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium hover:text-purple-700 dark:hover:text-purple-300 transition-colors">
+                @if(app()->getLocale() === 'en')
+                  Explore Category
+                @else
+                  Khám phá danh mục
+                @endif
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  @endif
   </div>
 </div>
 

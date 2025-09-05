@@ -12,7 +12,7 @@
           {{ __('app.new') }}
         </span>
       @endif
-      @if($product->is_on_sale)
+      @if($promotionService && $promotionService->isProductOnSale($product))
         <span class="px-2 py-1 bg-rose-500 text-white text-xs font-semibold rounded-lg shadow-lg">
           {{ __('app.sale') }}
         </span>
@@ -38,10 +38,16 @@
   <div class="p-4 flex-grow flex flex-col">
     <!-- Category & Brand -->
     <div class="flex items-center justify-between mb-2 h-[1.8rem]">
-      <a href="{{ route('search.category', $product->category) }}" 
-         class="inline-block px-2 py-1 text-xs bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-full font-medium hover:bg-brand-200 dark:hover:bg-brand-800/50 transition-colors">
-        {{ $product->category->display_name }}
-      </a>
+            @if($product->category)
+        <a href="{{ route('search.category', $product->category) }}"
+           class="inline-block px-2 py-1 text-xs bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-full font-medium hover:bg-brand-200 dark:hover:bg-brand-800/50 transition-colors">
+          {{ $product->category->display_name }}
+        </a>
+      @else
+        <span class="inline-block px-2 py-1 text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full font-medium">
+          {{ __('app.no_category') }}
+        </span>
+      @endif
       @if($product->brand)
         <a href="{{ route('search.brand', $product->brand) }}" 
            class="text-xs text-slate-500 dark:text-slate-400 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
@@ -86,14 +92,14 @@
     
     <!-- Price -->
     <div class="mb-4 min-h-[3.5rem] flex items-start">
-      @if($product->is_on_sale)
+      @if($promotionService && $promotionService->isProductOnSale($product))
         <div class="flex flex-col gap-1">
           <div class="flex items-center gap-2">
             <span class="text-lg font-bold text-rose-600">
               @if(app()->getLocale() === 'en')
-                ${{ number_format($product->final_price / 25000, 2) }}
+                ${{ number_format($promotionService->getFinalPrice($product) / 25000, 2) }}
               @else
-                {{ number_format($product->final_price, 0, ',', '.') }}đ
+                {{ number_format($promotionService->getFinalPrice($product), 0, ',', '.') }}đ
               @endif
             </span>
             <span class="text-sm text-slate-400 line-through">
@@ -104,9 +110,9 @@
               @endif
             </span>
           </div>
-          @if($product->discount_percentage)
+          @if($promotionService->getDiscountPercentage($product))
             <span class="px-2 py-1 bg-rose-100 text-rose-600 rounded-full text-xs font-semibold w-fit">
-              -{{ $product->discount_percentage }}%
+              -{{ $promotionService->getDiscountPercentage($product) }}%
             </span>
           @endif
         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $category->name . ' - Perfume Luxury')
+@section('title', $category->display_name . ' - Perfume Luxury')
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
@@ -12,12 +12,14 @@
                 <li><span class="mx-2">/</span></li>
                 <li><a href="{{ route('products.index') }}" class="hover:text-brand-600">Sản phẩm</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li class="text-slate-900 dark:text-slate-200 font-medium">{{ $category->name }}</li>
+                <li class="text-slate-900 dark:text-slate-200 font-medium">{{ $category->display_name }}</li>
             </ol>
         </nav>
         
-        <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-200 mb-2">{{ $category->name }}</h1>
-        <p class="text-slate-600 dark:text-slate-400">Khám phá bộ sưu tập {{ strtolower($category->name) }} đa dạng</p>
+        <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-200 mb-2">{{ $category->display_name }}</h1>
+                 <p class="text-slate-600 dark:text-slate-400">
+           {{ __('app.explore_category_collection', ['category' => strtolower($category->display_name)]) }}
+         </p>
     </div>
 
     <!-- Products Grid -->
@@ -33,14 +35,20 @@
                     
                     <div class="p-4 flex-grow flex flex-col">
                         <div class="mb-2 h-[1.8rem] flex items-center">
-                            <span class="inline-block px-2 py-1 text-xs bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-full">
-                                {{ $product->category->name }}
-                            </span>
+                            @if($product->category)
+                                <span class="inline-block px-2 py-1 text-xs bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-full">
+                                    {{ $product->category->display_name }}
+                                </span>
+                            @else
+                                <span class="inline-block px-2 py-1 text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full">
+                                    {{ __('app.no_category') }}
+                                </span>
+                            @endif
                         </div>
                         
-                        <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-2 line-clamp-2 h-[2.5rem] flex items-start">
-                            {{ $product->name }}
-                        </h3>
+                                                    <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-2 line-clamp-2 h-[2.5rem] flex items-start">
+                                {{ $product->display_name }}
+                            </h3>
                         
                         <div class="mb-2 h-[1.2rem] flex items-center">
                             @if($product->brand)
@@ -84,13 +92,13 @@
                         </div>
                         
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-sm text-slate-500 dark:text-slate-400">
-                                @if($product->stock > 0)
-                                    <span class="text-green-600">Còn hàng</span>
-                                @else
-                                    <span class="text-rose-600">Hết hàng</span>
-                                @endif
-                            </span>
+                                                         <span class="text-sm text-slate-500 dark:text-slate-400">
+                                 @if($product->stock > 0)
+                                     <span class="text-green-600">{{ __('app.in_stock') }}</span>
+                                 @else
+                                     <span class="text-rose-600">{{ __('app.out_of_stock') }}</span>
+                                 @endif
+                             </span>
                             
                             @if($product->origin)
                                 <span class="text-xs text-slate-500 dark:text-slate-400">{{ $product->origin }}</span>
@@ -127,12 +135,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                 </svg>
             </div>
-            <h3 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Chưa có sản phẩm nào</h3>
-            <p class="text-slate-600 dark:text-slate-400">Danh mục {{ $category->name }} chưa có sản phẩm nào</p>
+                         <h3 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">
+               {{ __('app.no_products_in_category') }}
+             </h3>
+             <p class="text-slate-600 dark:text-slate-400">
+               {{ __('app.category_has_no_products', ['category' => $category->display_name]) }}
+             </p>
             <div class="mt-4">
-                <a href="{{ route('products.index') }}" class="inline-block px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
-                    Xem tất cả sản phẩm
-                </a>
+                                                  <a href="{{ route('products.index') }}" class="inline-block px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors">
+                   {{ __('app.view_all_products') }}
+                 </a>
             </div>
         </div>
     @endif

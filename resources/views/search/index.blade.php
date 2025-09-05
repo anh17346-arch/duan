@@ -139,7 +139,10 @@
                 <!-- Results Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     @foreach($products as $product)
-                        @include('partials.product-card', ['product' => $product])
+                        @include('partials.product-card', [
+                            'product' => $product,
+                            'promotionService' => $promotionService
+                        ])
                     @endforeach
                 </div>
                 

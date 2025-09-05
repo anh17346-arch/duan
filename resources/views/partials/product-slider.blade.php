@@ -41,7 +41,10 @@
          style="scrollbar-width: none; -ms-overflow-style: none;">
       @foreach($products as $product)
         <div class="flex-shrink-0">
-          @include('partials.product-card-compact', ['product' => $product])
+          @include('partials.product-card-compact', [
+            'product' => $product, 
+            'promotionService' => $promotionService ?? null
+          ])
         </div>
       @endforeach
     </div>

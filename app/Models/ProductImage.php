@@ -33,7 +33,7 @@ class ProductImage extends Model
     public function getImageUrlAttribute(): string
     {
         if ($this->image_path && Storage::disk('public')->exists($this->image_path)) {
-            return Storage::url($this->image_path);
+            return url('/serve-image.php?path=' . urlencode($this->image_path));
         }
         return asset('images/product-placeholder.png');
     }
@@ -46,9 +46,9 @@ class ProductImage extends Model
             $thumbnailPath = $pathInfo['dirname'] . '/thumbnails/' . $pathInfo['basename'];
             
             if (Storage::disk('public')->exists($thumbnailPath)) {
-                return Storage::url($thumbnailPath);
+                return url('/serve-image.php?path=' . urlencode($thumbnailPath));
             }
-            return Storage::url($this->image_path);
+            return url('/serve-image.php?path=' . urlencode($this->image_path));
         }
         return asset('images/product-placeholder.png');
     }

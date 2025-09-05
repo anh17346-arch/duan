@@ -1,0 +1,32 @@
+/* Inter Font - System fallback */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Inter'), local('Inter-Regular'), local('Segoe UI'), local('Arial'), local('sans-serif');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Inter Medium'), local('Inter-Medium'), local('Segoe UI Semibold'), local('Arial'), local('sans-serif');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Inter SemiBold'), local('Inter-SemiBold'), local('Segoe UI Bold'), local('Arial'), local('sans-serif');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Inter Bold'), local('Inter-Bold'), local('Segoe UI Black'), local('Arial'), local('sans-serif');
+}

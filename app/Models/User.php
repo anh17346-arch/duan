@@ -22,6 +22,8 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
+        'status',
+        'customer_type',
         'terms_accepted_at',
         'avatar',            // QUAN TRỌNG: cho phép mass-assign avatar
     ];
@@ -69,6 +71,101 @@ class User extends Authenticatable
     public function cart()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get all notifications for this user
+     */
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'user_notifications')
+                    ->withPivot(['is_read', 'read_at', 'is_sent_email', 'email_sent_at', 'is_sent_sms', 'sms_sent_at'])
+                    ->withTimestamps()
+                    ->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get notifications appropriate for user role
+     */
+    public function roleNotifications()
+    {
+        $query = $this->belongsToMany(Notification::class, 'user_notifications')
+                    ->withPivot(['is_read', 'read_at', 'is_sent_email', 'email_sent_at', 'is_sent_sms', 'sms_sent_at'])
+                    ->withTimestamps()
+                    ->orderBy('created_at', 'desc');
+        
+        // Filter by user role
+        if ($this->role === 'admin') {
+            $query->where('type', 'admin');
+        } else {
+            $query->where('type', 'customer');
+        }
+        
+        return $query;
+    }
+
+    /**
+     * Get unread notifications count
+     */
+    public function getUnreadNotificationsCountAttribute(): int
+    {
+        return $this->roleNotifications()
+                    ->wherePivot('is_read', false)
+                    ->count();
+    }
+
+    /**
+     * Get unread notifications
+     */
+    public function unreadNotifications()
+    {
+        return $this->roleNotifications()
+                    ->wherePivot('is_read', false);
+    }
+
+    /**
+     * Get read notifications
+     */
+    public function readNotifications()
+    {
+        return $this->roleNotifications()
+                    ->wherePivot('is_read', true);
+    }
+
+    /**
+     * Mark notification as read
+     */
+    public function markNotificationAsRead($notificationId): bool
+    {
+        return $this->roleNotifications()
+                    ->where('notification_id', $notificationId)
+                    ->updateExistingPivot($notificationId, [
+                        'is_read' => true,
+                        'read_at' => now(),
+                    ]);
+    }
+
+    /**
+     * Mark all notifications as read
+     */
+    public function markAllNotificationsAsRead(): int
+    {
+        return $this->roleNotifications()
+                    ->wherePivot('is_read', false)
+                    ->updateExistingPivot($this->roleNotifications()->pluck('id'), [
+                        'is_read' => true,
+                        'read_at' => now(),
+                    ]);
     }
 
     // Cart helper methods

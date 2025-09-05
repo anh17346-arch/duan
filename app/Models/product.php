@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Models\Review;
 
 class Product extends Model
 {
@@ -19,6 +20,7 @@ class Product extends Model
         'description',
         'description_en',   // Mô tả tiếng Anh
         'short_desc',
+        'short_desc_en',    // Mô tả ngắn tiếng Anh
         'main_image',       // Ảnh chính từ form upload
         'price',
         'sale_price',
@@ -28,7 +30,6 @@ class Product extends Model
         'stock',
         'sku',              // Mã sản phẩm
         'status',
-        'category_id',
         'origin',
         'concentration',    // Nồng độ
         'is_featured',      // Sản phẩm nổi bật
@@ -61,28 +62,126 @@ class Product extends Model
         'main_image_url',
         'is_on_sale',
         'final_price',
-        'discount_percentage'
+        'discount_percentage',
+        'display_short_description'
     ];
 
     // Relationships
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category');
+    }
+
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'product_category');
     }
 
     public function images()
     {
-        return $this->hasMany(ProductImage::class)->ordered();
+        return $this->hasMany(ProductImage::class);
     }
 
     public function primaryImage()
     {
-        return $this->hasOne(ProductImage::class)->primary();
+        return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
 
     public function mainImage()
     {
-        return $this->hasOne(ProductImage::class)->primary();
+        return $this->hasOne(ProductImage::class)->where('is_primary', true);
+    }
+
+    /**
+     * Relationship với Promotion
+     */
+    public function promotions()
+    {
+        return $this->hasMany(Promotion::class);
+    }
+
+    /**
+     * Get reviews for this product
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get approved reviews for this product
+     */
+    public function approvedReviews()
+    {
+        return $this->hasMany(Review::class)->approved();
+    }
+
+    /**
+     * Get average rating for this product
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        return $this->approvedReviews()->avg('rating') ?? 0;
+    }
+
+    /**
+     * Get total reviews count for this product
+     */
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->approvedReviews()->count();
+    }
+
+    /**
+     * Get rating distribution (how many reviews for each star)
+     */
+    public function getRatingDistributionAttribute(): array
+    {
+        $distribution = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $distribution[$i] = $this->approvedReviews()->where('rating', $i)->count();
+        }
+        return $distribution;
+    }
+
+    /**
+     * Get formatted average rating with stars
+     */
+    public function getFormattedAverageRatingAttribute(): string
+    {
+        $avg = $this->average_rating;
+        $stars = '';
+        for ($i = 1; $i <= 5; $i++) {
+            if ($i <= $avg) {
+                $stars .= '★';
+            } elseif ($i - $avg < 1) {
+                $stars .= '☆';
+            } else {
+                $stars .= '☆';
+            }
+        }
+        return $stars;
+    }
+
+    /**
+     * Lấy khuyến mãi đang hoạt động
+     */
+    public function activePromotion()
+    {
+        return $this->promotions()
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->first();
+    }
+
+    /**
+     * Lấy khuyến mãi sắp diễn ra
+     */
+    public function upcomingPromotion()
+    {
+        return $this->promotions()
+            ->where('start_date', '>', now())
+            ->first();
     }
 
     // Accessors
@@ -90,19 +189,19 @@ class Product extends Model
     {
         // Ưu tiên 1: main_image từ form upload (ảnh chính)
         if ($this->main_image && Storage::disk('public')->exists($this->main_image)) {
-            return Storage::url($this->main_image);
+            return url('/serve-image.php?path=' . urlencode($this->main_image));
         }
         
         // Ưu tiên 2: ảnh gallery primary
         $primaryImage = $this->images()->where('is_primary', true)->first();
         if ($primaryImage && $primaryImage->image_path && Storage::disk('public')->exists($primaryImage->image_path)) {
-            return Storage::url($primaryImage->image_path);
+            return url('/serve-image.php?path=' . urlencode($primaryImage->image_path));
         }
         
         // Ưu tiên 3: ảnh đầu tiên trong gallery
         $firstImage = $this->images()->first();
         if ($firstImage && $firstImage->image_path && Storage::disk('public')->exists($firstImage->image_path)) {
-            return Storage::url($firstImage->image_path);
+            return url('/serve-image.php?path=' . urlencode($firstImage->image_path));
         }
         
         // Fallback cuối cùng là placeholder
@@ -127,7 +226,7 @@ class Product extends Model
     /** Giá cuối cùng (sau khi giảm giá) */
     public function getFinalPriceAttribute(): float
     {
-        if ($this->is_on_sale && $this->sale_price && $this->sale_price > 0) {
+        if ($this->sale_price && $this->sale_price > 0) {
             return $this->sale_price;
         }
         return $this->price;
@@ -136,10 +235,35 @@ class Product extends Model
     /** Phần trăm giảm giá */
     public function getDiscountPercentageAttribute(): int
     {
-        if ($this->is_on_sale && $this->sale_price && $this->sale_price > 0) {
+        if ($this->sale_price && $this->sale_price > 0) {
             return round((($this->price - $this->sale_price) / $this->price) * 100);
         }
         return 0;
+    }
+
+    /**
+     * Lấy thông tin khuyến mãi sắp diễn ra
+     */
+    public function getUpcomingPromotionInfoAttribute(): ?array
+    {
+        $upcomingPromotion = $this->upcomingPromotion();
+        if ($upcomingPromotion) {
+            return [
+                'id' => $upcomingPromotion->id,
+                'discount_percentage' => $upcomingPromotion->discount_percentage,
+                'start_date' => $upcomingPromotion->start_date,
+                'end_date' => $upcomingPromotion->end_date,
+                'formatted_start_date' => $upcomingPromotion->formatted_start_date,
+                'formatted_end_date' => $upcomingPromotion->formatted_end_date,
+            ];
+        }
+        return null;
+    }
+
+    /** Lấy category đầu tiên của sản phẩm */
+    public function getCategoryAttribute()
+    {
+        return $this->categories()->first();
     }
 
     // Scopes
@@ -171,7 +295,7 @@ class Product extends Model
 
     public function scopeNew($query, $days = 30)
     {
-        return $query->where('created_at', '>=', now()->subDays($days));
+        return $query->where('products.created_at', '>=', now()->subDays($days));
     }
 
     public function scopePopular($query)
@@ -215,7 +339,7 @@ class Product extends Model
               ->orWhere('slug', '=', $searchTerm);
             
             // Tìm kiếm theo danh mục (thông qua relationship)
-            $q->orWhereHas('category', function($categoryQuery) use ($searchTerm) {
+            $q->orWhereHas('categories', function($categoryQuery) use ($searchTerm) {
                 $categoryQuery->where('name', 'LIKE', "%{$searchTerm}%")
                              ->orWhere('name', 'LIKE', "{$searchTerm}%")
                              ->orWhere('name', 'LIKE', "%{$searchTerm}")
@@ -293,7 +417,9 @@ class Product extends Model
 
     public function scopeByCategory(Builder $query, int $categoryId): Builder
     {
-        return $query->where('category_id', $categoryId);
+        return $query->whereHas('categories', function ($q) use ($categoryId) {
+            $q->where('categories.id', $categoryId);
+        });
     }
 
     // Mutators
@@ -324,6 +450,15 @@ class Product extends Model
             return $this->description_en;
         }
         return $this->description ?? '';
+    }
+
+    public function getDisplayShortDescriptionAttribute(): string
+    {
+        $locale = app()->getLocale();
+        if ($locale === 'en' && $this->short_desc_en) {
+            return $this->short_desc_en;
+        }
+        return $this->short_desc ?? '';
     }
 
     // Helper methods
@@ -392,5 +527,12 @@ class Product extends Model
         }
         
         return number_format($sold);
+    }
+    /**
+     * Get sold count (alias for sold_count to prevent errors)
+     */
+    public function getSoldAttribute(): int
+    {
+        return $this->sold_count ?? 0;
     }
 }

@@ -1,0 +1,221 @@
+/* Admin Dark Mode Select Dropdown Fixes */
+
+/* Force dark mode styling for all select elements in admin area */
+.admin-area select,
+[data-admin="true"] select,
+.admin select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+/* Force dark mode styling for all option elements in admin area */
+.admin-area select option,
+[data-admin="true"] select option,
+.admin select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Hover states for options in admin area */
+.admin-area select option:hover,
+[data-admin="true"] select option:hover,
+.admin select option:hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* Selected states for options in admin area */
+.admin-area select option:checked,
+.admin-area select option:selected,
+[data-admin="true"] select option:checked,
+[data-admin="true"] select option:selected,
+.admin select option:checked,
+.admin select option:selected {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Override any Tailwind classes that might interfere */
+.admin-area select option.bg-white,
+[data-admin="true"] select option.bg-white,
+.admin select option.bg-white {
+  background-color: #1e293b !important;
+}
+
+.admin-area select option.text-slate-900,
+.admin-area select option.text-gray-900,
+[data-admin="true"] select option.text-slate-900,
+[data-admin="true"] select option.text-gray-900,
+.admin select option.text-slate-900,
+.admin select option.text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+/* Force dark mode for specific admin pages */
+.admin-reviews select,
+.admin-orders select,
+.admin-products select,
+.admin-categories select,
+.admin-promotions select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+.admin-reviews select option,
+.admin-orders select option,
+.admin-products select option,
+.admin-categories select option,
+.admin-promotions select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Ensure proper contrast for all select elements */
+.dark select,
+html.dark select,
+[data-theme="dark"] select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #475569 !important;
+}
+
+.dark select option,
+html.dark select option,
+[data-theme="dark"] select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Override any remaining browser defaults with maximum specificity */
+html.dark select,
+html.dark select *,
+html.dark select option,
+html.dark select option * {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Force all option elements to have dark styling regardless of any other classes */
+html.dark select option,
+html.dark select option[class*="bg-white"],
+html.dark select option[class*="text-gray-900"],
+html.dark select option[class*="text-slate-900"],
+html.dark select option[class*="dark:bg-gray-800"],
+html.dark select option[class*="dark:bg-slate-700"],
+html.dark select option[class*="dark:text-gray-100"],
+html.dark select option[class*="dark:text-slate-100"] {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  background-image: none !important;
+}
+
+/* Ensure proper contrast for selected and hovered options */
+html.dark select option:checked,
+html.dark select option:selected {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+html.dark select option:hover {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* Nuclear option - force all options in dark mode with maximum specificity */
+html.dark select option,
+html.dark select option *,
+html.dark select option[class*="bg-white"],
+html.dark select option[class*="text-slate"],
+html.dark select option[class*="text-white"],
+html.dark select option[class*="bg-slate"],
+html.dark select option[class*="dark:bg"],
+html.dark select option[class*="dark:text"],
+html.dark select option[class*="text-gray"],
+html.dark select option[class*="bg-gray"] {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  background-image: none !important;
+}
+
+/* Override browser defaults for select elements in dark mode */
+html.dark select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Force all option elements to have dark styling */
+html.dark option,
+html.dark option * {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Final nuclear option - override everything */
+html.dark select option,
+html.dark select option[class*="bg-white"],
+html.dark select option[class*="text-slate-900"],
+html.dark select option[class*="text-slate-100"],
+html.dark select option[class*="bg-slate-800"],
+html.dark select option[class*="bg-slate-700"],
+html.dark select option[class*="dark:bg-slate-800"],
+html.dark select option[class*="dark:bg-slate-700"],
+html.dark select option[class*="dark:text-slate-100"],
+html.dark select option[class*="dark:text-gray-100"],
+html.dark select option[class*="text-gray-900"],
+html.dark select option[class*="bg-gray-800"],
+html.dark select option[class*="dark:bg-gray-800"] {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  background-image: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Override any remaining browser styles */
+html.dark select option {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Hover states for options */
+select option:hover {
+  background-color: #dbeafe !important;
+  color: #1e293b !important;
+}
+
+.dark select option:hover,
+html.dark select option:hover,
+[data-theme="dark"] select option:hover {
+  background-color: #1e40af !important;
+  color: #ffffff !important;
+}
+
+/* Global select styling improvements */
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.5rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.5em 1.5em !important;
+  padding-right: 2.5rem !important;
+}
+
+.dark select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f1f5f9' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+}
+
+/* Ensure proper contrast for selected options */
+select option:checked {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.dark select option:checked {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}

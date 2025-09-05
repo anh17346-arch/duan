@@ -204,7 +204,29 @@
                   </svg>
                                     {{ __('app.choose_image') }}
                   <input type="file" name="avatar" accept="image/*" class="hidden"
-                                           @change="if($event.target.files[0]){ const f=$event.target.files[0]; const url=URL.createObjectURL(f); preview=url; $refs.avatarClear.value = 0; }">
+                                           @change="if($event.target.files[0]){ 
+                                             const f=$event.target.files[0]; 
+                                             
+                                             // Client-side validation
+                                             const maxSize = 4 * 1024 * 1024; // 4MB
+                                             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                                             
+                                             if (f.size > maxSize) {
+                                               alert('File quá lớn! Kích thước tối đa: 4MB');
+                                               $event.target.value = '';
+                                               return;
+                                             }
+                                             
+                                             if (!allowedTypes.includes(f.type)) {
+                                               alert('Định dạng file không hợp lệ! Chỉ chấp nhận: JPG, PNG, WEBP');
+                                               $event.target.value = '';
+                                               return;
+                                             }
+                                             
+                                             const url=URL.createObjectURL(f); 
+                                             preview=url; 
+                                             $refs.avatarClear.value = 0; 
+                                           }">
                 </label>
 
                 <button type="button"
@@ -219,6 +241,23 @@
               <input type="hidden" name="avatar_clear" x-ref="avatarClear" value="0">
             </div>
             @error('avatar') <p class="text-rose-600 text-sm mt-2">{{ $message }}</p> @enderror
+            
+            <!-- File size info -->
+            <div class="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+              <div class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="text-sm text-blue-800 dark:text-blue-200">
+                  <p class="font-medium mb-1">Yêu cầu về ảnh đại diện:</p>
+                  <ul class="text-xs space-y-1">
+                    <li>• Định dạng: JPG, PNG, WEBP</li>
+                    <li>• Kích thước tối đa: 4MB</li>
+                    <li>• Kích thước tối thiểu: 64x64 pixel</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
 
                     <!-- Basic Info Grid -->
@@ -249,9 +288,9 @@
                             <div class="relative group">
                                 <select name="gender" required
                                         class="w-full px-4 py-4 rounded-2xl bg-white/50 dark:bg-slate-700/50 border border-slate-200/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 dark:focus:ring-brand-400/50 dark:focus:border-brand-400/50 transition-all duration-300 backdrop-blur-sm group-hover:shadow-lg group-hover:shadow-brand-500/10">
-                                    <option value="male" @selected(old('gender', $user->gender) === 'male')>{{ __('app.male') }}</option>
-                                    <option value="female" @selected(old('gender', $user->gender) === 'female')>{{ __('app.female') }}</option>
-                                    <option value="other" @selected(old('gender', $user->gender) === 'other')>{{ __('app.other') }}</option>
+                                    <option value="male" @selected(old('gender', $user->gender) === 'male') class="bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100">{{ __('app.male') }}</option>
+                                    <option value="female" @selected(old('gender', $user->gender) === 'female') class="bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100">{{ __('app.female') }}</option>
+                                    <option value="other" @selected(old('gender', $user->gender) === 'other') class="bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100">{{ __('app.other') }}</option>
                                 </select>
                                 <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-brand-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                             </div>

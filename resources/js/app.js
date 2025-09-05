@@ -1,4 +1,5 @@
 import './bootstrap';
+import './admin-dark-mode';
 
 import Alpine from 'alpinejs';
 

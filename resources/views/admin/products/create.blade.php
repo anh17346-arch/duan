@@ -1,7 +1,9 @@
 @extends('layouts.app')
-@section('title','Thêm sản phẩm mới - Perfume Luxury')
+@section('title', __('app.add_product') . ' - Perfume Luxury')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- Modern Unified Background -->
 <div class="min-h-screen relative overflow-hidden">
   <!-- Animated Background -->
@@ -23,56 +25,34 @@
   </div>
 
 <div class="relative max-w-4xl mx-auto px-4 py-8">
-  <div class="relative mb-8">
-    <a href="{{ route('admin.dashboard') }}" 
-       class="group absolute left-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 rounded-full hover:from-blue-100 hover:to-blue-200 dark:hover:from-blue-800 dark:hover:to-blue-700 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/50 dark:border-slate-600/50">
-      <svg class="w-6 h-6 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
-      </svg>
-    </a>
+  <!-- Back Button -->
+  <div class="mb-6">
+      <a href="{{ route('admin.dashboard') }}" 
+         class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 rounded-xl hover:from-slate-200 hover:to-slate-300 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          {{ __('app.back') }}
+      </a>
+  </div>
+
+  <div class="mb-8">
     <div class="flex flex-col items-center">
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 text-center">Thêm sản phẩm mới</h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-2 text-center">Tạo sản phẩm mới trong hệ thống</p>
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 text-center">{{ __('app.add_product') }}</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-2 text-center">{{ __('app.manage_all_products') }}</p>
     </div>
   </div>
 
   <div class="backdrop-blur-md bg-white/20 dark:bg-white/5 rounded-2xl p-6 shadow-lg border border-white/30 dark:border-white/10">
     <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" class="space-y-6">
       @csrf
-      @include('admin.products._form', ['product' => null, 'categories' => $categories])
+      @include('admin.products._form', ['product' => $product, 'categories' => $categories])
 
-      <div class="flex items-center justify-end pt-8">
-        <button type="submit" class="group px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl flex items-center gap-3 relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-          <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-300 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-          <span class="relative z-10">Lưu lại thông tin sản phẩm</span>
-        </button>
-      </div>
+
     </form>
   </div>
 </div>
 </div>
-
-<style>
-@keyframes blob {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-.animate-blob {
-  animation: blob 7s infinite;
-}
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-.animation-delay-6000 {
-  animation-delay: 6s;
-}
-</style>
 @endsection
 
 @push('scripts')
@@ -144,6 +124,27 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const translatedDesc = await translateText(vietnameseDesc, 'en');
       document.getElementById('description_en').value = translatedDesc;
+    } finally {
+      this.textContent = '🌐 Auto Translate';
+      this.disabled = false;
+    }
+  });
+
+  // Auto-translate short description
+  document.getElementById('translate-short-desc-btn')?.addEventListener('click', async function() {
+    const vietnameseShortDesc = document.getElementById('short_desc').value;
+    
+    if (!vietnameseShortDesc.trim()) {
+      alert('Vui lòng nhập mô tả ngắn tiếng Việt trước.');
+      return;
+    }
+
+    this.textContent = '🔄 Đang dịch...';
+    this.disabled = true;
+
+    try {
+      const translatedShortDesc = await translateText(vietnameseShortDesc, 'en');
+      document.getElementById('short_desc_en').value = translatedShortDesc;
     } finally {
       this.textContent = '🌐 Auto Translate';
       this.disabled = false;

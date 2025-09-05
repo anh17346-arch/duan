@@ -59,9 +59,9 @@
                 <div class="space-y-3">
                     <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">{{ __('app.category') }}</label>
                     <select name="category" class="w-full px-4 py-3 rounded-xl border-0 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm text-slate-900 dark:text-slate-100 shadow-lg focus:ring-4 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-800 transition-all duration-300 font-medium">
-                        <option value="">{{ __('app.all_categories') }}</option>
+                        <option value="" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.all_categories') }}</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" @selected(request('category') == $category->id)>
+                            <option value="{{ $category->id }}" @selected(request('category') == $category->id) class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
                                 {{ $category->display_name }}
                             </option>
                         @endforeach
@@ -72,9 +72,9 @@
                 <div class="space-y-3">
                     <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">{{ __('app.brand') }}</label>
                     <select name="brand" class="w-full px-4 py-3 rounded-xl border-0 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm text-slate-900 dark:text-slate-100 shadow-lg focus:ring-4 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-800 transition-all duration-300 font-medium">
-                        <option value="">{{ __('app.all_brands') }}</option>
+                        <option value="" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.all_brands') }}</option>
                         @foreach($brands as $brand)
-                            <option value="{{ $brand }}" @selected(request('brand') == $brand)>
+                            <option value="{{ $brand }}" @selected(request('brand') == $brand) class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
                                 {{ $brand }}
                             </option>
                         @endforeach
@@ -85,10 +85,10 @@
                 <div class="space-y-3">
                     <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">{{ __('app.gender') }}</label>
                     <select name="gender" class="w-full px-4 py-3 rounded-xl border-0 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm text-slate-900 dark:text-slate-100 shadow-lg focus:ring-4 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-800 transition-all duration-300 font-medium">
-                        <option value="">{{ __('app.all') }}</option>
-                        <option value="male" @selected(request('gender') == 'male')>{{ __('app.male') }}</option>
-                        <option value="female" @selected(request('gender') == 'female')>{{ __('app.female') }}</option>
-                        <option value="unisex" @selected(request('gender') == 'unisex')>{{ __('app.unisex') }}</option>
+                        <option value="" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.all') }}</option>
+                        <option value="male" @selected(request('gender') == 'male') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.male') }}</option>
+                        <option value="female" @selected(request('gender') == 'female') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.female') }}</option>
+                        <option value="unisex" @selected(request('gender') == 'unisex') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.unisex') }}</option>
                     </select>
                 </div>
                 
@@ -167,10 +167,10 @@
             <div class="flex items-center gap-3">
                 <label class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('app.sort_by') }}:</label>
                 <select onchange="this.form.submit()" name="sort" form="filter-form" class="px-4 py-2 rounded-xl border-0 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm text-slate-900 dark:text-slate-100 shadow-lg focus:ring-4 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-800 transition-all duration-300 font-medium text-sm">
-                    <option value="newest" @selected(request('sort') == 'newest')>{{ __('app.newest') }}</option>
-                    <option value="price_low" @selected(request('sort') == 'price_low')>{{ __('app.price_low_to_high') }}</option>
-                    <option value="price_high" @selected(request('sort') == 'price_high')>{{ __('app.price_high_to_low') }}</option>
-                    <option value="name" @selected(request('sort') == 'name')>{{ __('app.name_a_z') }}</option>
+                    <option value="newest" @selected(request('sort') == 'newest') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.newest') }}</option>
+                    <option value="price_low" @selected(request('sort') == 'price_low') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.price_low_to_high') }}</option>
+                    <option value="price_high" @selected(request('sort') == 'price_high') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.price_high_to_low') }}</option>
+                    <option value="name" @selected(request('sort') == 'name') class="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">{{ __('app.name_a_z') }}</option>
                 </select>
             </div>
         </div>
@@ -192,9 +192,9 @@
                                     {{ __('app.featured') }}
                                 </span>
                             @endif
-                            @if($product->is_on_sale)
+                            @if($promotionService && $promotionService->isProductOnSale($product))
                                 <span class="px-3 py-1 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-xs font-bold rounded-full shadow-lg">
-                                    -{{ $product->discount_percentage }}%
+                                    -{{ $promotionService->getDiscountPercentage($product) }}%
                                 </span>
                             @endif
                             @if($product->is_new)
@@ -206,9 +206,15 @@
 
                         <!-- Category Badge -->
                         <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 bg-black/20 backdrop-blur-sm text-white text-xs font-medium rounded-full border border-white/30">
-                                {{ $product->category->display_name }}
-                            </span>
+                            @if($product->category)
+                                <span class="px-3 py-1 bg-black/20 backdrop-blur-sm text-white text-xs font-medium rounded-full border border-white/30">
+                                    {{ $product->category->display_name }}
+                                </span>
+                            @else
+                                <span class="px-3 py-1 bg-slate-500/20 backdrop-blur-sm text-white text-xs font-medium rounded-full border border-slate-400/30">
+                                    {{ __('app.no_category') }}
+                                </span>
+                            @endif
                         </div>
                     </div>
                     
@@ -248,14 +254,14 @@
                         
                         <!-- Pricing Section - Takes available space -->
                         <div class="flex-grow flex flex-col justify-center mb-6">
-                            @if($product->is_on_sale)
+                            @if($promotionService && $promotionService->isProductOnSale($product))
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-3">
                                         <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">
                                             @if(app()->getLocale() === 'en')
-                                                ${{ number_format($product->final_price / 25000, 2) }}
+                                                ${{ number_format($promotionService->getFinalPrice($product) / 25000, 2) }}
                                             @else
-                                                {{ number_format($product->final_price, 0, ',', '.') }}đ
+                                                {{ number_format($promotionService->getFinalPrice($product), 0, ',', '.') }}đ
                                             @endif
                                         </span>
                                         <span class="text-lg text-slate-400 line-through font-medium">
@@ -318,8 +324,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                 </svg>
             </div>
-            <h3 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Không tìm thấy sản phẩm</h3>
-            <p class="text-slate-600 dark:text-slate-400">Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                                      <h3 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">
+               {{ __('app.no_products_found') }}
+             </h3>
+             <p class="text-slate-600 dark:text-slate-400">
+               {{ __('app.try_changing_filters') }}
+             </p>
         </div>
     @endif
 </div>

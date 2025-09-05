@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Review;
+use App\Services\PromotionService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -11,7 +13,7 @@ class ProductController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Product::with(['category'])->active()->latest();
+        $query = Product::with(['categories'])->active()->latest();
         
         // Sử dụng tìm kiếm nâng cao
         $filters = $request->only(['q', 'category', 'gender', 'brand', 'min_price', 'max_price', 'on_sale', 'featured', 'new', 'best_seller']);
@@ -23,24 +25,64 @@ class ProductController extends Controller
         // Lấy danh sách thương hiệu duy nhất để hiển thị trong filter
         $brands = Product::active()->distinct()->pluck('brand')->filter()->sort()->values();
         
-        return view('products.index', compact('products', 'categories', 'brands'));
+        $promotionService = new PromotionService();
+        return view('products.index', compact('products', 'categories', 'brands', 'promotionService'));
     }
 
-    public function show(Product $product): View
+    public function show(Product $product, Request $request): View
     {
-        $product->load(['category', 'images']);
+        $product->load(['categories', 'images']);
         
         // Increment view count
         $product->incrementViewCount();
         
         // Sản phẩm liên quan
         $relatedProducts = Product::active()
-            ->where('category_id', $product->category_id)
+            ->whereHas('categories', function ($q) use ($product) {
+                $q->whereIn('categories.id', $product->categories->pluck('id'));
+            })
             ->where('id', '!=', $product->id)
             ->limit(4)
             ->get();
-            
-        return view('products.show', compact('product', 'relatedProducts'));
+        
+        // Khởi tạo service khuyến mãi
+        $promotionService = new PromotionService();
+        
+        // Lấy đánh giá cho sản phẩm với filter và sorting
+        $reviewsQuery = Review::where('product_id', $product->id)
+            ->where('is_approved', true)
+            ->with(['user', 'images']);
+        
+        // Filter by rating
+        if ($request->filled('rating')) {
+            $reviewsQuery->where('rating', $request->rating);
+        }
+        
+        // Filter by has images
+        if ($request->filled('has_images')) {
+            $reviewsQuery->whereHas('images');
+        }
+        
+        // Sort reviews
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $reviewsQuery->orderBy('created_at', 'asc');
+                break;
+            case 'rating_high':
+                $reviewsQuery->orderBy('rating', 'desc')->orderBy('created_at', 'desc');
+                break;
+            case 'rating_low':
+                $reviewsQuery->orderBy('rating', 'asc')->orderBy('created_at', 'desc');
+                break;
+            default: // newest
+                $reviewsQuery->orderBy('created_at', 'desc');
+                break;
+        }
+        
+        $reviews = $reviewsQuery->paginate(10)->withQueryString();
+        
+        return view('products.show', compact('product', 'relatedProducts', 'promotionService', 'reviews'));
     }
 
     public function category(Category $category, Request $request): View
@@ -54,6 +96,7 @@ class ProductController extends Controller
         
         $products = $query->paginate(12)->withQueryString();
         
-        return view('products.category', compact('category', 'products'));
+        $promotionService = new PromotionService();
+        return view('products.category', compact('category', 'products', 'promotionService'));
     }
 }

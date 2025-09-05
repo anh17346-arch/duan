@@ -15,7 +15,8 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_ids' => ['nullable', 'array'],
+            'category_ids.*' => ['exists:categories,id'],
             'name'        => ['required', 'string', 'max:255'],
             'name_en'     => ['nullable', 'string', 'max:255'],
             'brand'       => ['nullable', 'string', 'max:255'],
@@ -24,6 +25,7 @@ class ProductRequest extends FormRequest
             'price'       => ['required', 'integer', 'min:0'],
             'sale_price'  => ['nullable', 'integer', 'min:0', 'lte:price'],
             'short_desc'  => ['nullable', 'string'],
+            'short_desc_en' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'description_en' => ['nullable', 'string'],
             'stock'       => ['required', 'integer', 'min:0'],
@@ -31,11 +33,8 @@ class ProductRequest extends FormRequest
             'origin'      => ['nullable', 'string', 'max:100'],
             'concentration' => ['required', Rule::in(['EDC', 'EDT', 'EDP', 'Parfum', 'Extrait'])],
             'is_featured' => 'boolean',
-            'is_on_sale' => 'boolean',
             'is_best_seller' => 'boolean',
             'is_new' => 'boolean',
-            'sale_start_date' => 'nullable|date',
-            'sale_end_date' => 'nullable|date|after:sale_start_date',
             'views_count' => 'nullable|integer|min:0',
             'sold_count' => 'nullable|integer|min:0',
             'status'      => ['required', Rule::in([0, 1])],
@@ -54,8 +53,8 @@ class ProductRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'category_id.required' => 'Vui lòng chọn danh mục.',
-            'category_id.exists'   => 'Danh mục không tồn tại.',
+            'category_ids.array' => 'Danh mục phải là một mảng.',
+            'category_ids.*.exists' => 'Danh mục không tồn tại.',
             'name.required'        => 'Tên sản phẩm không được để trống.',
             'name.max'             => 'Tên sản phẩm không được vượt quá 255 ký tự.',
             'gender.required'      => 'Vui lòng chọn giới tính.',

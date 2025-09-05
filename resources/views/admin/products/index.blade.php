@@ -1,153 +1,245 @@
 @extends('layouts.app')
-@section('title','Quản lý sản phẩm - Perfume Luxury')
+@section('title', __('app.manage_products') . ' - Perfume Luxury')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-8">
-  <!-- Back Button -->
-  <div class="mb-6">
-      <a href="{{ route('admin.dashboard') }}" 
-         class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 rounded-2xl hover:from-slate-200 hover:to-slate-300 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
-          </svg>
-      </a>
+<!-- Modern Unified Background -->
+<div class="min-h-screen relative overflow-hidden">
+  <!-- Animated Background -->
+  <div class="fixed inset-0 -z-10">
+    <!-- Main Gradient Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/60 via-purple-50/60 to-pink-50/60 dark:from-slate-900 dark:via-blue-900/30 dark:via-purple-900/30 dark:to-pink-900/30"></div>
+    
+    <!-- Floating Animated Blobs -->
+    <div class="absolute top-20 left-10 w-64 h-64 bg-gradient-to-r from-blue-400/10 to-purple-400/10 dark:from-blue-400/5 dark:to-purple-400/5 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-blob"></div>
+    <div class="absolute top-40 right-20 w-72 h-72 bg-gradient-to-r from-pink-400/10 to-rose-400/10 dark:from-pink-400/5 dark:to-rose-400/5 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-blob animation-delay-2000"></div>
+    <div class="absolute bottom-32 left-1/3 w-80 h-80 bg-gradient-to-r from-cyan-400/10 to-teal-400/10 dark:from-cyan-400/5 dark:to-teal-400/5 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-blob animation-delay-4000"></div>
+    <div class="absolute bottom-20 right-1/4 w-56 h-56 bg-gradient-to-r from-emerald-400/10 to-green-400/10 dark:from-emerald-400/5 dark:to-green-400/5 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl animate-blob animation-delay-6000"></div>
+    
+    <!-- Mesh Gradient Overlay -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.05),transparent_50%)]"></div>
+    
+    <!-- Subtle Grid Pattern -->
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(100,116,139,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(100,116,139,0.03)_1px,transparent_1px)] bg-[size:64px_64px] dark:bg-[linear-gradient(rgba(148,163,184,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.02)_1px,transparent_1px)]"></div>
   </div>
 
+<div class="relative max-w-7xl mx-auto px-4 py-8">
+  <!-- Header -->
   <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100">Quản lý sản phẩm</h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-2">Quản lý tất cả sản phẩm trong hệ thống</p>
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ __('app.manage_products') }}</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-2">
+        @if(app()->getLocale() === 'en')
+          Manage all products in the system
+        @else
+          Quản lý tất cả sản phẩm trong hệ thống
+        @endif
+      </p>
     </div>
+    
     <div class="flex items-center gap-4">
-      <a href="{{ route('admin.products.create') }}"
-         class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold transition-colors">
-        + Thêm sản phẩm
+      <a href="{{ route('admin.dashboard') }}" 
+         class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        {{ __('app.dashboard') }}
+      </a>
+      
+      <a href="{{ route('admin.products.create') }}" 
+         class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-lg hover:from-emerald-600 hover:to-green-600 transition-all duration-300 font-semibold">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        {{ __('app.add_product') }}
       </a>
     </div>
   </div>
 
-  {{-- Banner flash / lỗi --}}
+  <!-- Flash Messages -->
   @if (session('success'))
     <div class="mb-6 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3">
       {{ session('success') }}
     </div>
   @endif
-  @if ($errors->any())
-    <div class="mb-6 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 px-4 py-3">
-      {{ $errors->first() }}
-    </div>
-  @endif
 
   <!-- Search and Filters -->
-  <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200/60 dark:border-slate-700 mb-6">
+  <div class="bg-white/20 dark:bg-white/5 rounded-2xl p-6 shadow-lg border border-white/30 dark:border-white/10 mb-8">
     <form method="get" class="flex items-center gap-4">
       <div class="flex-1">
         <input name="q" value="{{ $q }}"
-               placeholder="Tìm theo tên, thương hiệu, slug..."
+               placeholder="{{ __('app.search_by_name_brand') }}"
                class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:border-transparent">
       </div>
       <button type="submit" class="px-6 py-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors">
-        Tìm kiếm
+        {{ __('app.search') }}
       </button>
       @if($q)
         <a href="{{ route('admin.products.index') }}" class="px-6 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-xl font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-          Xóa bộ lọc
+          {{ __('app.clear_filter') }}
         </a>
       @endif
     </form>
   </div>
 
-  <!-- Products Table -->
-  <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/60 dark:border-slate-700 overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead class="bg-slate-50 dark:bg-slate-700/50">
-          <tr>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Ảnh</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Tên sản phẩm</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Thương hiệu</th>
-            <th class="text-left px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Danh mục</th>
-            <th class="text-right px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Giá</th>
-            <th class="text-center px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Trạng thái</th>
-            <th class="text-right px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Thao tác</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-          @forelse ($products as $product)
-            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
-              <td class="px-6 py-4">
-                <img src="{{ $product->main_image_url }}" class="w-16 h-16 object-cover rounded-lg border border-slate-200 dark:border-slate-600" alt="{{ $product->name }}">
-              </td>
-              <td class="px-6 py-4">
-                <div class="font-medium text-slate-900 dark:text-slate-100">{{ $product->name }}</div>
-                @if($product->slug)
-                  <div class="text-sm text-slate-500 dark:text-slate-400">{{ $product->slug }}</div>
-                @endif
-              </td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-400">
-                {{ $product->brand ?: 'Không có' }}
-              </td>
-              <td class="px-6 py-4 text-slate-600 dark:text-slate-400">
-                {{ optional($product->category)->name ?: 'Không có' }}
-              </td>
-              <td class="px-6 py-4 text-right">
-                @if($product->sale_price)
-                  <div class="text-sm text-slate-400 line-through">{{ number_format($product->price, 0, ',', '.') }}đ</div>
-                  <div class="text-brand-600 dark:text-brand-400 font-semibold">{{ number_format($product->sale_price, 0, ',', '.') }}đ</div>
-                @else
-                  <div class="text-slate-900 dark:text-slate-100 font-semibold">{{ number_format($product->price, 0, ',', '.') }}đ</div>
-                @endif
-              </td>
-              <td class="px-6 py-4 text-center">
-                @if($product->status)
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
-                    Đang bán
-                  </span>
-                @else
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">
-                    Ẩn
-                  </span>
-                @endif
-              </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2 justify-end">
-                  <a href="{{ route('admin.products.edit', $product) }}"
-                     class="px-3 py-1.5 text-sm rounded-lg border border-amber-300 dark:border-amber-600 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors">
-                    Sửa
-                  </a>
-                  <form method="POST" action="{{ route('admin.products.destroy', $product) }}" class="inline"
-                        onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="px-3 py-1.5 text-sm rounded-lg border border-rose-300 dark:border-rose-600 text-rose-700 dark:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors">
-                      Xóa
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          @empty
+  <!-- Products List -->
+  <div class="bg-white/20 dark:bg-white/5 rounded-2xl shadow-lg border border-white/30 dark:border-white/10 overflow-hidden">
+    @if($products->count() > 0)
+      <div class="overflow-x-auto">
+        <table class="w-full product-table">
+          <thead class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-700/50">
             <tr>
-              <td colspan="7" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                <div class="flex flex-col items-center gap-3">
-                  <svg class="w-12 h-12 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                  </svg>
-                  <div>
-                    <p class="font-medium">Chưa có sản phẩm nào</p>
-                    <p class="text-sm">Bắt đầu bằng cách tạo sản phẩm đầu tiên</p>
-                  </div>
-                </div>
-              </td>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.product') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.category') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.price') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.status') }}
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.created') }}
+              </th>
+              <th class="px-6 py-4 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                {{ __('app.actions') }}
+              </th>
             </tr>
-          @endforelse
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    @if ($products->hasPages())
+          </thead>
+          <tbody class="divide-y divide-slate-100/50 dark:divide-slate-700/30">
+            @foreach($products as $product)
+              <tr class="product-table-row group hover:bg-slate-50/60 dark:hover:bg-slate-700/30 transition-all duration-300 ease-out relative border-b border-slate-100/50 dark:border-slate-700/30">
+                <td class="px-6 py-4 relative z-10">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-12 w-12">
+                      @if($product->main_image)
+                        <img class="h-12 w-12 rounded-lg object-cover shadow-sm product-image ring-1 ring-slate-200/50 dark:ring-slate-600/30" src="{{ Storage::url($product->main_image) }}" alt="{{ $product->name }}">
+                      @else
+                        <div class="h-12 w-12 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center shadow-sm product-image ring-1 ring-slate-200/50 dark:ring-slate-600/30">
+                          <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z"></path>
+                          </svg>
+                        </div>
+                      @endif
+                    </div>
+                    <div class="ml-4">
+                      <div class="product-name text-sm font-semibold text-slate-900 dark:text-slate-100 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors">
+                        {{ $product->name }}
+                      </div>
+                      <div class="product-brand text-sm font-medium text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors">
+                        {{ $product->brand ?? __('app.not_available') }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 relative z-10">
+                  <div class="text-sm text-slate-900 dark:text-slate-100">
+                    @if($product->categories->count() > 0)
+                      @foreach($product->categories->take(2) as $category)
+                        <span class="category-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100/80 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 group-hover:bg-blue-200/80 dark:group-hover:bg-blue-900/40 transition-all duration-200 ease-out shadow-sm">
+                          {{ \App\Helpers\CategoryHelper::translate($category->name, app()->getLocale()) }}
+                        </span>
+                        @if(!$loop->last) <span class="mx-1 text-slate-400">•</span> @endif
+                      @endforeach
+                      @if($product->categories->count() > 2)
+                        <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors">+{{ $product->categories->count() - 2 }}</span>
+                      @endif
+                    @else
+                      <span class="text-slate-400 dark:text-slate-500">-</span>
+                    @endif
+                  </div>
+                </td>
+                <td class="px-6 py-4 relative z-10">
+                  <div class="product-price text-sm text-slate-900 dark:text-slate-100 font-mono">
+                    @if($product->sale_price > 0)
+                      <span class="line-through text-slate-400 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-400 transition-colors">
+                        {{ app()->getLocale() === 'en' ? '$' : '' }}{{ app()->getLocale() === 'en' ? number_format($product->price / 25000, 2) : number_format($product->price) }}{{ app()->getLocale() === 'en' ? '' : '₫' }}
+                      </span>
+                      <span class="text-emerald-600 dark:text-emerald-400 font-semibold group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
+                        {{ app()->getLocale() === 'en' ? '$' : '' }}{{ app()->getLocale() === 'en' ? number_format($product->sale_price / 25000, 2) : number_format($product->sale_price) }}{{ app()->getLocale() === 'en' ? '' : '₫' }}
+                      </span>
+                    @else
+                      <span class="font-semibold group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors">
+                        {{ app()->getLocale() === 'en' ? '$' : '' }}{{ app()->getLocale() === 'en' ? number_format($product->price / 25000, 2) : number_format($product->price) }}{{ app()->getLocale() === 'en' ? '' : '₫' }}
+                      </span>
+                    @endif
+                  </div>
+                </td>
+                <td class="px-6 py-4 relative z-10">
+                  @if($product->status)
+                    <span class="product-status active inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 dark:from-green-900/30 dark:to-emerald-900/30 dark:text-green-300 group-hover:from-green-200 group-hover:to-emerald-200 dark:group-hover:from-green-900/40 dark:group-hover:to-emerald-900/40 transition-all duration-200 ease-out shadow-sm">
+                      {{ __('app.active') }}
+                    </span>
+                  @else
+                    <span class="product-status inactive inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-red-100 to-pink-100 text-red-800 dark:from-red-900/30 dark:to-pink-900/30 dark:text-red-300 group-hover:from-red-200 group-hover:to-pink-200 dark:group-hover:from-red-900/40 dark:group-hover:to-pink-900/40 transition-all duration-200 ease-out shadow-sm">
+                      {{ __('app.inactive') }}
+                    </span>
+                  @endif
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400 relative z-10 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors product-date">
+                  {{ $product->created_at->format('d/m/Y') }}
+                </td>
+                <td class="px-6 py-4 text-right text-sm font-medium relative z-10">
+                  <div class="action-buttons flex items-center justify-end gap-2">
+                    <a href="{{ route('products.show', $product) }}" 
+                       class="action-button text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-all duration-200 ease-out p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:scale-105"
+                       title="{{ __('app.view') }}">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                    </a>
+                    <a href="{{ route('admin.products.edit', $product) }}" 
+                       class="action-button text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-all duration-200 ease-out p-1 rounded hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:scale-105"
+                       title="{{ __('app.edit') }}">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    </a>
+                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('app.confirm_delete') }}')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" 
+                              class="action-button text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-all duration-200 ease-out p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:scale-105"
+                              title="{{ __('app.delete') }}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
       <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700">
-        {{ $products->onEachSide(1)->links() }}
+        {{ $products->links() }}
+      </div>
+    @else
+      <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-slate-900 dark:text-slate-100">{{ __('app.no_products') }}</h3>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {{ __('app.get_started_by_creating_product') }}
+        </p>
+        <div class="mt-6">
+          <a href="{{ route('admin.products.create') }}" 
+             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            {{ __('app.add_product') }}
+          </a>
+        </div>
       </div>
     @endif
   </div>

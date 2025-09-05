@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::query();
+        $query = Category::withCount('products');
         
         // Search functionality
         if ($request->filled('kw')) {
@@ -31,14 +31,19 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories',
+            'name_en' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|boolean'
+            'description_en' => 'nullable|string',
+            'status' => 'required|in:0,1'
         ]);
 
-        Category::create($request->all());
+        $data = $request->all();
+        $data['status'] = (bool) $data['status'];
+
+        Category::create($data);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Danh mục đã được tạo thành công!');
+            ->with('success', __('app.category_created_successfully'));
     }
 
     public function edit(Category $category)
@@ -50,26 +55,31 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'name_en' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|boolean'
+            'description_en' => 'nullable|string',
+            'status' => 'required|in:0,1'
         ]);
 
-        $category->update($request->all());
+        $data = $request->all();
+        $data['status'] = (bool) $data['status'];
+
+        $category->update($data);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Danh mục đã được cập nhật thành công!');
+            ->with('success', __('app.category_updated_successfully'));
     }
 
     public function destroy(Category $category)
     {
         // Check if category has products
         if ($category->products()->count() > 0) {
-            return back()->with('error', 'Không thể xóa danh mục có sản phẩm!');
+            return back()->with('error', __('app.cannot_delete_category_with_products'));
         }
 
         $category->delete();
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Danh mục đã được xóa thành công!');
+            ->with('success', __('app.category_deleted_successfully'));
     }
 }

@@ -1,3 +1,5 @@
+@import './fonts.css';
+@import './admin-dark-mode.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,6 +11,225 @@
   
   .shadow-soft {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  /* Product table hover effects */
+  .product-table-row {
+    @apply relative transition-all duration-300 ease-out;
+  }
+
+  .product-table-row:hover {
+    @apply bg-slate-50/60 dark:bg-slate-800/20;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .product-table-row:hover td {
+    @apply relative z-10;
+  }
+
+  /* Ensure text visibility on hover */
+  .product-table-row:hover .product-name {
+    @apply text-slate-800 dark:text-slate-200;
+  }
+
+  .product-table-row:hover .product-brand {
+    @apply text-slate-600 dark:text-slate-400;
+  }
+
+  .product-table-row:hover .product-price {
+    @apply text-slate-800 dark:text-slate-200;
+  }
+
+  .product-table-row:hover .product-status {
+    @apply bg-green-200/80 dark:bg-green-900/40;
+  }
+
+  .product-table-row:hover .product-date {
+    @apply text-slate-600 dark:text-slate-400;
+  }
+
+  /* Category tags hover effect */
+  .product-table-row:hover .category-tag {
+    @apply bg-blue-200/80 dark:bg-blue-900/40;
+  }
+
+  /* Ensure proper contrast and visibility */
+  .product-table-row {
+    position: relative;
+    z-index: 1;
+  }
+
+  .product-table-row:hover {
+    z-index: 5;
+  }
+
+  .product-table-row td {
+    position: relative;
+    z-index: 1;
+  }
+
+  .product-table-row:hover td {
+    z-index: 10;
+  }
+
+  /* Enhanced hover background - more subtle */
+  .product-table-row:hover {
+    background: rgba(248, 250, 252, 0.6) !important;
+    backdrop-filter: blur(4px);
+  }
+
+  .dark .product-table-row:hover {
+    background: rgba(51, 65, 85, 0.3) !important;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Ensure buttons remain visible */
+  .product-table-row:hover .action-buttons a,
+  .product-table-row:hover .action-buttons button {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Override any conflicting styles - more subtle */
+  .product-table-row:hover,
+  .product-table-row:hover *,
+  .product-table-row:hover td,
+  .product-table-row:hover div,
+  .product-table-row:hover span {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Ensure table cells maintain proper display */
+  .product-table-row:hover td {
+    display: table-cell !important;
+  }
+
+  /* Force text color inheritance - more subtle */
+  .product-table-row:hover .product-name,
+  .product-table-row:hover .product-brand,
+  .product-table-row:hover .product-price,
+  .product-table-row:hover .product-date {
+    color: inherit !important;
+  }
+
+  /* Ensure proper contrast for dark mode - more subtle */
+  .dark .product-table-row:hover .product-name {
+    color: #e2e8f0 !important;
+  }
+
+  .dark .product-table-row:hover .product-brand {
+    color: #94a3b8 !important;
+  }
+
+  .dark .product-table-row:hover .product-price {
+    color: #e2e8f0 !important;
+  }
+
+  .dark .product-table-row:hover .product-date {
+    color: #94a3b8 !important;
+  }
+
+  /* Smooth transitions for all elements */
+  .product-table-row * {
+    transition: all 0.2s ease-out;
+  }
+
+  /* Better category tag styling */
+  .category-tag {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .product-table-row:hover .category-tag {
+    @apply shadow-sm;
+  }
+
+  /* Status badge improvements */
+  .product-status {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .product-table-row:hover .product-status {
+    @apply shadow-sm;
+  }
+
+  /* Better table styling */
+  .product-table {
+    @apply rounded-xl overflow-hidden;
+  }
+
+  .product-table thead {
+    @apply bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-700/50;
+  }
+
+  .product-table thead th {
+    @apply font-semibold text-slate-600 dark:text-slate-300;
+  }
+
+  /* Improved row styling */
+  .product-table-row {
+    @apply border-b border-slate-100/50 dark:border-slate-700/30;
+  }
+
+  .product-table-row:last-child {
+    @apply border-b-0;
+  }
+
+  /* Better image styling */
+  .product-image {
+    @apply ring-1 ring-slate-200/50 dark:ring-slate-600/30;
+  }
+
+  /* Enhanced category tags */
+  .category-tag {
+    @apply font-medium tracking-wide;
+  }
+
+  /* Better action buttons */
+  .action-button {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .action-button:hover {
+    @apply scale-105;
+  }
+
+  /* Smooth hover transitions */
+  .product-table-row {
+    @apply hover:shadow-md hover:scale-[1.01] transition-all duration-300 ease-out;
+  }
+
+  /* Better dark mode contrast */
+  .dark .product-table-row {
+    @apply bg-slate-800/20;
+  }
+
+  .dark .product-table-row:hover {
+    @apply bg-slate-700/30;
+  }
+
+  /* Improved text readability */
+  .product-name {
+    @apply font-semibold;
+  }
+
+  .product-brand {
+    @apply font-medium;
+  }
+
+  /* Better price styling */
+  .product-price {
+    @apply font-mono;
+  }
+
+  /* Enhanced status badges */
+  .product-status.active {
+    @apply bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30;
+  }
+
+  .product-status.inactive {
+    @apply bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30;
   }
 }
 
@@ -26,8 +247,11 @@
     margin: 0;
   }
   
-  /* Custom dropdown styling */
-  select {
+  /* Enhanced dropdown styling with maximum specificity */
+  select,
+  select *,
+  select option,
+  select optgroup {
     background-image: none !important;
     cursor: pointer;
     position: relative;
@@ -41,22 +265,24 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
   }
   
-  /* Dropdown list styling */
+  /* Dropdown list styling - Enhanced for dark mode */
   select:not([size]) {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
     border: 2px solid #e2e8f0 !important;
     border-radius: 16px !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
     backdrop-filter: blur(10px) !important;
+    color: #1e293b !important;
   }
   
   .dark select:not([size]) {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
     border: 2px solid #475569 !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    color: #f1f5f9 !important;
   }
   
-  /* Modern dropdown options */
+  /* Modern dropdown options - Enhanced for dark mode */
   select option {
     padding: 16px 20px !important;
     margin: 4px 8px !important;
@@ -67,14 +293,255 @@
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
     border: 1px solid #e2e8f0 !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    color: #1e293b !important;
   }
   
-  /* Dark mode options */
-  .dark select option {
+  /* Dark mode options - Enhanced visibility with maximum specificity */
+  .dark select option,
+  html.dark select option,
+  [data-theme="dark"] select option {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
     border: 1px solid #475569 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     color: #f1f5f9 !important;
+  }
+  
+  /* Force dark mode styling for all option elements */
+  option {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+  }
+  
+  .dark option,
+  html.dark option,
+  [data-theme="dark"] option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Additional specificity for select elements */
+  select option {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+  }
+  
+  .dark select option,
+  html.dark select option,
+  [data-theme="dark"] select option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Override any inline styles for options in dark mode */
+  .dark select option[class*="bg-white"],
+  html.dark select option[class*="bg-white"],
+  [data-theme="dark"] select option[class*="bg-white"] {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Ensure proper contrast for all option elements in dark mode */
+  .dark option,
+  html.dark option,
+  [data-theme="dark"] option,
+  .dark select option,
+  html.dark select option,
+  [data-theme="dark"] select option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+  }
+  
+  /* Hover state for options in dark mode */
+  .dark option:hover,
+  html.dark option:hover,
+  [data-theme="dark"] option:hover,
+  .dark select option:hover,
+  html.dark select option:hover,
+  [data-theme="dark"] select option:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Maximum specificity override for dark mode options */
+  .dark select option,
+  html.dark select option,
+  [data-theme="dark"] select option,
+  .dark select option[class*="bg-white"],
+  html.dark select option[class*="bg-white"],
+  [data-theme="dark"] select option[class*="bg-white"],
+  .dark select option[class*="text-slate-900"],
+  html.dark select option[class*="text-slate-900"],
+  [data-theme="dark"] select option[class*="text-slate-900"] {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Force dark mode styling with maximum specificity */
+  select option.dark\:bg-slate-800,
+  select option.dark\:text-slate-100,
+  .dark select option.dark\:bg-slate-800,
+  .dark select option.dark\:text-slate-100 {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Ultimate override for dark mode options - highest specificity */
+  html.dark select option,
+  html.dark select option[class*="bg-white"],
+  html.dark select option[class*="text-slate-900"],
+  html.dark select option[class*="text-slate-100"],
+  html.dark select option[class*="bg-slate-800"] {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Ensure selected options are visible in dark mode */
+  
+  /* Enhanced notification dropdown dark mode styling */
+  .dark .notification-dropdown-item {
+    background-color: rgba(30, 41, 59, 0.8);
+    border-color: rgba(148, 163, 184, 0.1);
+  }
+  
+  .dark .notification-dropdown-item:hover {
+    background-color: rgba(148, 163, 184, 0.1);
+  }
+  
+  .dark .notification-dropdown-item.bg-blue-50 {
+    background-color: rgba(59, 130, 246, 0.15);
+  }
+  
+  /* Ensure proper contrast for notification content in dark mode */
+  .dark .notification-dropdown-item h4 {
+    color: #f1f5f9 !important;
+  }
+  
+  .dark .notification-dropdown-item p {
+    color: #cbd5e1 !important;
+  }
+  
+  .dark .notification-dropdown-item .text-slate-500 {
+    color: #94a3b8 !important;
+  }
+  
+  .dark .notification-dropdown-item .text-slate-600 {
+    color: #cbd5e1 !important;
+  }
+  
+  /* Enhanced notification dropdown background */
+  .dark [x-data*="open"] .bg-white {
+    background-color: rgba(30, 41, 59, 0.95) !important;
+    backdrop-filter: blur(12px);
+  }
+  html.dark select option:checked,
+  html.dark select option:selected {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Final override - force all options in dark mode to have proper contrast */
+  html.dark select option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Override any Tailwind classes that might interfere */
+  html.dark select option.bg-white {
+    background-color: #1e293b !important;
+  }
+  
+  html.dark select option.text-slate-900 {
+    color: #f1f5f9 !important;
+  }
+  
+  /* Nuclear option - force all options in dark mode with maximum specificity */
+  html.dark select option,
+  html.dark select option *,
+  html.dark select option[class*="bg-white"],
+  html.dark select option[class*="text-slate"],
+  html.dark select option[class*="text-white"],
+  html.dark select option[class*="bg-slate"],
+  html.dark select option[class*="dark:bg"],
+  html.dark select option[class*="dark:text"] {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    background-image: none !important;
+  }
+  
+  /* Override browser defaults for select elements in dark mode */
+  html.dark select {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Force all option elements to have dark styling */
+  html.dark option,
+  html.dark option * {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Final nuclear option - override everything */
+  html.dark select option,
+  html.dark select option[class*="bg-white"],
+  html.dark select option[class*="text-slate-900"],
+  html.dark select option[class*="text-slate-100"],
+  html.dark select option[class*="bg-slate-800"],
+  html.dark select option[class*="dark:bg-slate-800"],
+  html.dark select option[class*="dark:text-slate-100"] {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    background-image: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+  
+  /* Override any remaining browser styles */
+  html.dark select option {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Hover states for options */
+  select option:hover {
+    background-color: #dbeafe !important;
+    color: #1e293b !important;
+  }
+  
+  .dark select option:hover,
+  html.dark select option:hover,
+  [data-theme="dark"] select option:hover {
+    background-color: #1e40af !important;
+    color: #ffffff !important;
+  }
+  
+  /* Global select styling improvements */
+  select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 0.5rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.5em 1.5em !important;
+    padding-right: 2.5rem !important;
+  }
+  
+  .dark select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f1f5f9' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  }
+  
+  /* Ensure proper contrast for selected options */
+  select option:checked {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  .dark select option:checked {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
   }
   
   select option:hover {
@@ -82,13 +549,17 @@
     border-color: #3b82f6 !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25) !important;
+    color: #1e293b !important;
   }
   
-  .dark select option:hover {
+  .dark select option:hover,
+  html.dark select option:hover,
+  [data-theme="dark"] select option:hover {
     background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
     border-color: #60a5fa !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+    color: #ffffff !important;
   }
   
   select option:checked {
@@ -129,4 +600,212 @@
   .dark select::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
   }
+  
+  /* Additional styling for modal dropdowns and form selects */
+  .modal select,
+  form select,
+  #status-modal select,
+  #bulk-status {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    backdrop-filter: blur(10px) !important;
+    color: #1e293b !important;
+  }
+  
+  .dark .modal select,
+  .dark form select,
+  .dark #status-modal select,
+  .dark #bulk-status,
+  html.dark .modal select,
+  html.dark form select,
+  html.dark #status-modal select,
+  html.dark #bulk-status {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    border: 2px solid #475569 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Ensure dropdown options are visible in all contexts */
+  .modal select option,
+  form select option,
+  #status-modal select option,
+  #bulk-status option {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+  }
+  
+  .dark .modal select option,
+  .dark form select option,
+  .dark #status-modal select option,
+  .dark #bulk-status option,
+  html.dark .modal select option,
+  html.dark form select option,
+  html.dark #status-modal select option,
+  html.dark #bulk-status option {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    border: 1px solid #475569 !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Hover states for modal dropdowns */
+  .modal select option:hover,
+  form select option:hover,
+  #status-modal select option:hover,
+  #bulk-status option:hover {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    border-color: #3b82f6 !important;
+    color: #1e293b !important;
+  }
+  
+  .dark .modal select option:hover,
+  .dark form select option:hover,
+  .dark #status-modal select option:hover,
+  .dark #bulk-status option:hover,
+  html.dark .modal select option:hover,
+  html.dark form select option:hover,
+  html.dark #status-modal select option:hover,
+  html.dark #bulk-status option:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%) !important;
+    border-color: #60a5fa !important;
+    color: #ffffff !important;
+  }
+  
+  /* Selected states for modal dropdowns */
+  .modal select option:checked,
+  form select option:checked,
+  #status-modal select option:checked,
+  #bulk-status option:checked {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    color: white !important;
+    border-color: #1d4ed8 !important;
+  }
+  
+  /* Force dark mode styling with maximum specificity */
+  .dark select,
+  html.dark select,
+  [data-theme="dark"] select {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #475569 !important;
+  }
+  
+  .dark select option,
+  html.dark select option,
+  [data-theme="dark"] select option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  .dark select option:hover,
+  html.dark select option:hover,
+  [data-theme="dark"] select option:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+  }
+  
+  .dark select option:checked,
+  html.dark select option:checked,
+  [data-theme="dark"] select option:checked {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Ultimate override for all select elements in dark mode */
+  html.dark select,
+  html.dark select *,
+  html.dark select option,
+  html.dark select option * {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  /* Force all option elements to have dark styling regardless of any other classes */
+  html.dark select option,
+  html.dark select option[class*="bg-white"],
+  html.dark select option[class*="text-gray-900"],
+  html.dark select option[class*="text-slate-900"],
+  html.dark select option[class*="dark:bg-gray-800"],
+  html.dark select option[class*="dark:text-gray-100"] {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    background-image: none !important;
+  }
+  
+  /* Ensure proper contrast for selected and hovered options */
+  html.dark select option:checked,
+  html.dark select option:selected {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  html.dark select option:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Override any remaining browser defaults */
+  html.dark select {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #475569 !important;
+  }
+  
+  /* Force dark mode for all select elements in the admin area */
+  .dark select,
+  .dark select option,
+  html.dark select,
+  html.dark select option {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  
+  .dark select option:checked,
+  .dark select option:selected,
+  html.dark select option:checked,
+  html.dark select option:selected {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  .dark select option:hover,
+  html.dark select option:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+  }
+}
+
+/* Blob animations for modern unified background */
+@keyframes blob {
+  0% { 
+    transform: translate(0px, 0px) scale(1); 
+  }
+  33% { 
+    transform: translate(30px, -50px) scale(1.1); 
+  }
+  66% { 
+    transform: translate(-20px, 20px) scale(0.9); 
+  }
+  100% { 
+    transform: translate(0px, 0px) scale(1); 
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 { 
+  animation-delay: 2s; 
+}
+
+.animation-delay-4000 { 
+  animation-delay: 4s; 
+}
+
+.animation-delay-6000 { 
+  animation-delay: 6s; 
 }

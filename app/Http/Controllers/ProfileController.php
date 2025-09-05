@@ -43,8 +43,13 @@ class ProfileController extends Controller
             'last_name'    => ['required','min:2','max:20','regex:/^\pL+(?:\s\pL+)*$/u'],
             'gender'       => ['required', Rule::in(['male','female','other'])],
             'address'      => ['required','min:5','max:150','regex:/^[\pL\pN\s,\.\-\/#]+$/u'],
-            'avatar'       => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048','dimensions:min_width=64,min_height=64'],
+            'avatar'       => ['nullable','image','mimes:jpg,jpeg,png,webp','max:4096','dimensions:min_width=64,min_height=64'],
             'avatar_clear' => ['nullable','boolean'],
+        ], [
+            'avatar.image' => 'File phải là hình ảnh.',
+            'avatar.mimes' => 'Hình ảnh phải có định dạng: jpg, jpeg, png, webp.',
+            'avatar.max' => 'Kích thước hình ảnh không được vượt quá 4MB.',
+            'avatar.dimensions' => 'Hình ảnh phải có kích thước tối thiểu 64x64 pixel.',
         ]);
 
         $updates = collect($validated)->except(['avatar', 'avatar_clear'])->toArray();

@@ -19,7 +19,7 @@
                 <!-- Sale Info -->
                 <div class="text-center">
                     <h1 class="text-3xl font-bold bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 dark:from-rose-400 dark:via-pink-400 dark:to-rose-300 bg-clip-text text-transparent">
-                        🎉 Sản phẩm đang giảm giá
+                         Sản phẩm đang giảm giá
                     </h1>
                     <p class="text-slate-600 dark:text-slate-400 mt-2 px-4 py-2 bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl">
                         Ưu đãi hấp dẫn không thể bỏ qua
@@ -47,7 +47,10 @@
             <!-- Results Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 @foreach($products as $product)
-                    @include('partials.product-card', ['product' => $product])
+                    @include('partials.product-card', [
+                        'product' => $product,
+                        'promotionService' => $promotionService
+                    ])
                 @endforeach
             </div>
             
@@ -66,14 +69,14 @@
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 dark:from-rose-400 dark:to-pink-400 bg-clip-text text-transparent mb-3">
-                    Không có sản phẩm giảm giá
+                    {{ __('app.no_products_found') }}
                 </h3>
                 <p class="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
-                    Hiện tại không có sản phẩm nào đang giảm giá
+                    {{ __('app.try_changing_filters') }}
                 </p>
                 <a href="{{ route('categories.index') }}" 
                    class="px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
-                    Về trang chủ
+                    {{ __('app.back_to_home') }}
                 </a>
             </div>
         @endif

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Promotion;
+use App\Observers\PromotionObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Đăng ký Promotion Observer
+        Promotion::observe(PromotionObserver::class);
     }
 }

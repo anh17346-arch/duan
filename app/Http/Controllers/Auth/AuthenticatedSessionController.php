@@ -23,22 +23,32 @@ class AuthenticatedSessionController extends Controller
      * Xử lý đăng nhập.
      * (Không yêu cầu email verified)
      */
-   public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate();
-    $request->session()->regenerate();
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+        $request->session()->regenerate();
 
-    return redirect()->intended(route('home'))
-        ->with('success', 'Đăng nhập thành công!');
-}
+        $user = Auth::user();
+        $welcomeMessage = app()->getLocale() === 'en' 
+            ? "Welcome back, {$user->first_name}! 👋" 
+            : "Chào mừng bạn quay lại, {$user->first_name}! 👋";
 
-public function destroy(Request $request): RedirectResponse
-{
-    Auth::guard('web')->logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        return redirect()->intended(route('home'))
+            ->with('success', $welcomeMessage);
+    }
 
-    return redirect()->route('home')
-        ->with('success', 'Đã đăng xuất.');
-}
+    public function destroy(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        $logoutMessage = app()->getLocale() === 'en' 
+            ? "You have been successfully logged out." 
+            : "Bạn đã đăng xuất thành công.";
+
+        return redirect()->route('home')
+            ->with('success', $logoutMessage);
+    }
 }

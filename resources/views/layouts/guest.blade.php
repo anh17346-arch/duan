@@ -14,25 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <!-- Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <!-- Tailwind CDN + Alpine -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'] },
-          colors: { brand: { DEFAULT:'#6366F1',50:'#eef2ff',100:'#e0e7ff',600:'#4f46e5',700:'#4338ca' } },
-          boxShadow: { soft:'0 10px 30px rgba(0,0,0,.07)' }
-        }
-      }
-    }
-  </script>
-  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <!-- Local CSS and JS -->
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   <style>
     body {
@@ -62,7 +45,7 @@
   </style>
 </head>
 <style>[x-cloak]{display:none!important}</style>
-<body class="h-full text-slate-800 dark:text-slate-100">
+<body class="h-full bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100">
   <!-- Modern Unified Background -->
   <div class="fixed inset-0 -z-10">
     <!-- Main Gradient Background -->
@@ -85,7 +68,7 @@
   <header class="absolute top-0 left-0 right-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/5 dark:supports-[backdrop-filter]:bg-slate-900/5">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <!-- Logo -->
-      <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-white font-semibold text-lg hover:text-slate-200 transition-colors">
+      <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-slate-800 dark:text-slate-200 font-semibold text-lg hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
         <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
           <path d="M3 9l9-6 9 6-9 6-9-6zm0 6l9 6 9-6"/>
         </svg>
@@ -95,7 +78,7 @@
       <!-- Settings Button (Language + Dark Mode) -->
       <div class="relative" x-data="{ settingsOpen: false }">
         <button type="button" 
-                class="p-3 rounded-xl bg-white/10 hover:bg-white/20 dark:bg-slate-800/30 dark:hover:bg-slate-700/40 text-white transition-all duration-300 backdrop-blur-sm border border-white/20"
+                class="p-3 rounded-xl bg-white/10 hover:bg-white/20 dark:bg-slate-800/30 dark:hover:bg-slate-700/40 text-slate-800 dark:text-slate-200 transition-all duration-300 backdrop-blur-sm border border-slate-300/20 dark:border-slate-600/20"
                 @click="settingsOpen = !settingsOpen">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
@@ -150,12 +133,6 @@
 
           <!-- Dark Mode Toggle -->
           <div class="p-4">
-            <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-              </svg>
-              {{ __('app.dark_mode') }}
-            </h3>
             <button @click="dark = !dark"
                     class="flex items-center justify-between w-full px-3 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-xl transition-colors duration-200">
               <span class="flex items-center">
@@ -184,7 +161,7 @@
     @yield('content')
   </main>
 
-  <footer class="relative z-10 py-8 text-center text-sm text-slate-300/60">
+  <footer class="relative z-10 py-8 text-center text-sm text-slate-600 dark:text-slate-400">
     © {{ date('Y') }} Perfume Luxury — Authentication
   </footer>
 

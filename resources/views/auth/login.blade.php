@@ -36,6 +36,89 @@
           </div>
         @endif
 
+        @if ($errors->any())
+          <div class="mb-6 p-4 rounded-2xl bg-rose-50/10 border border-rose-200/20">
+            <div class="flex items-center gap-2 text-rose-300 mb-3">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="font-semibold">
+                @if(app()->getLocale() === 'en')
+                  Please check the following issues:
+                @else
+                  Vui lòng kiểm tra các vấn đề sau:
+                @endif
+              </span>
+            </div>
+            <div class="space-y-2">
+              @if($errors->has('email'))
+                <div class="flex items-start gap-2 p-3 bg-rose-100/20 dark:bg-rose-900/20 rounded-xl border border-rose-200/30">
+                  <svg class="w-4 h-4 text-rose-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <div class="font-medium text-rose-300">
+                      @if(app()->getLocale() === 'en')
+                        Email Address
+                      @else
+                        Địa chỉ Email
+                      @endif
+                    </div>
+                    <div class="text-rose-200 text-sm">{{ $errors->first('email') }}</div>
+                  </div>
+                </div>
+              @endif
+              
+              @if($errors->has('password'))
+                <div class="flex items-start gap-2 p-3 bg-rose-100/20 dark:bg-rose-900/20 rounded-xl border border-rose-200/30">
+                  <svg class="w-4 h-4 text-rose-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <div class="font-medium text-rose-300">
+                      @if(app()->getLocale() === 'en')
+                        Password
+                      @else
+                        Mật khẩu
+                      @endif
+                    </div>
+                    <div class="text-rose-200 text-sm">{{ $errors->first('password') }}</div>
+                  </div>
+                </div>
+              @endif
+            </div>
+            
+            <!-- Helpful Tips -->
+            <div class="mt-4 p-3 bg-blue-50/20 dark:bg-blue-900/20 rounded-xl border border-blue-200/30">
+              <div class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <div class="text-blue-200 text-sm">
+                  <div class="font-medium mb-1">
+                    @if(app()->getLocale() === 'en')
+                      Need help?
+                    @else
+                      Cần hỗ trợ?
+                    @endif
+                  </div>
+                  <div>
+                    @if(app()->getLocale() === 'en')
+                      • Check if Caps Lock is on<br>
+                      • Make sure your email is correct<br>
+                      • Try resetting your password
+                    @else
+                      • Kiểm tra Caps Lock có bật không<br>
+                      • Đảm bảo email chính xác<br>
+                      • Thử đặt lại mật khẩu
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        @endif
+
         <form method="POST" action="{{ route('login') }}" class="space-y-6" autocomplete="off">
           @csrf
 
@@ -46,7 +129,7 @@
             </label>
             <input type="email" name="email" value="{{ old('email') }}" required maxlength="255"
                    placeholder="name@example.com"
-                   class="w-full px-5 py-4 rounded-2xl bg-white/90 dark:bg-slate-700/90 border border-slate-300 dark:border-slate-600 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-slate-100">
+                   class="w-full px-5 py-4 rounded-2xl bg-white/90 dark:bg-slate-700/90 border {{ $errors->has('email') ? 'border-rose-500 dark:border-rose-400' : 'border-slate-300 dark:border-slate-600' }} outline-none focus:ring-2 {{ $errors->has('email') ? 'focus:ring-rose-500 focus:border-rose-500' : 'focus:ring-blue-500 focus:border-blue-500' }} transition-all duration-300 placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-slate-100">
             @error('email') 
               <p class="text-rose-500 text-sm mt-2 flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -67,7 +150,7 @@
                      required minlength="8" oncopy="return false" oncut="return false" onpaste="return false"
                      @keydown.cap="caps=$event.getModifierState && $event.getModifierState('CapsLock')"
                      @keyup.cap="caps=$event.getModifierState && $event.getModifierState('CapsLock')"
-                     class="w-full px-5 py-4 pr-12 rounded-2xl bg-white/90 dark:bg-slate-700/90 border border-slate-300 dark:border-slate-600 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 select-none placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-slate-100">
+                     class="w-full px-5 py-4 pr-12 rounded-2xl bg-white/90 dark:bg-slate-700/90 border {{ $errors->has('password') ? 'border-rose-500 dark:border-rose-400' : 'border-slate-300 dark:border-slate-600' }} outline-none focus:ring-2 {{ $errors->has('password') ? 'focus:ring-rose-500 focus:border-rose-500' : 'focus:ring-blue-500 focus:border-blue-500' }} transition-all duration-300 select-none placeholder-slate-500 dark:placeholder-slate-400 text-slate-900 dark:text-slate-100">
               <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors duration-200" @click="show=!show" tabindex="-1">
                 <svg x-show="!show" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 110-8 4 4 0 010 8z"/>
@@ -93,6 +176,11 @@
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                 </svg>
                 {{ $message }}
+                @if(app()->getLocale() === 'en')
+                  <a href="{{ route('password.request') }}" class="ml-2 text-blue-500 hover:underline">Forgot password?</a>
+                @else
+                  <a href="{{ route('password.request') }}" class="ml-2 text-blue-500 hover:underline">Quên mật khẩu?</a>
+                @endif
               </p> 
             @enderror
           </div>

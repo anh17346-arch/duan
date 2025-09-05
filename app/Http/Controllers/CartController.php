@@ -19,7 +19,45 @@ class CartController extends Controller
     {
         $cartItems = auth()->user()->cart()->with('product.category')->get();
         
-        return view('cart.index', compact('cartItems'));
+        // Load active promotions for cart items
+        $activePromotions = \App\Models\Promotion::with('product')
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->get();
+        
+        // Check which cart items have promotions and calculate totals
+        $originalTotal = 0;
+        $discountedTotal = 0;
+        $totalSavings = 0;
+        
+        $cartItemsWithPromotions = $cartItems->map(function ($item) use ($activePromotions, &$originalTotal, &$discountedTotal, &$totalSavings) {
+            $item->has_promotion = $activePromotions->contains('product_id', $item->product_id);
+            $item->promotion = $activePromotions->where('product_id', $item->product_id)->first();
+            
+            // Add promotion quantity info
+            if ($item->has_promotion && $item->promotion) {
+                $item->promotion_remaining = $item->promotion->getRemainingQuantityAttribute();
+                $item->promotion_sold = $item->promotion->sold_quantity;
+                $item->promotion_total = $item->promotion->quantity;
+            }
+            
+            // Calculate totals
+            $itemOriginalPrice = $item->product->price * $item->quantity;
+            $originalTotal += $itemOriginalPrice;
+            
+            if ($item->has_promotion && $item->promotion) {
+                $discountRate = $item->promotion->discount_percentage / 100;
+                $itemDiscountedPrice = $itemOriginalPrice * (1 - $discountRate);
+                $discountedTotal += $itemDiscountedPrice;
+                $totalSavings += ($itemOriginalPrice - $itemDiscountedPrice);
+            } else {
+                $discountedTotal += $itemOriginalPrice;
+            }
+            
+            return $item;
+        });
+        
+        return view('cart.index', compact('cartItems', 'activePromotions', 'originalTotal', 'discountedTotal', 'totalSavings'));
     }
 
     public function add(Request $request): RedirectResponse
@@ -34,6 +72,29 @@ class CartController extends Controller
         // Kiểm tra tồn kho
         if (!$product->hasStock($request->quantity)) {
             return back()->with('error', 'Sản phẩm không đủ số lượng trong kho!');
+        }
+
+        // Kiểm tra khuyến mãi và số lượng khuyến mãi
+        $activePromotion = $product->promotions()->active()->first();
+        if ($activePromotion && $activePromotion->quantity > 0) {
+            $remainingPromotionQuantity = $activePromotion->getRemainingQuantityAttribute();
+            
+            // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+            $existingCart = auth()->user()->cart()->where('product_id', $request->product_id)->first();
+            $currentCartQuantity = $existingCart ? $existingCart->quantity : 0;
+            $requestedQuantity = $request->quantity;
+            
+            // Tính tổng số lượng muốn thêm
+            $totalRequestedQuantity = $currentCartQuantity + $requestedQuantity;
+            
+            // Kiểm tra xem có vượt quá số lượng khuyến mãi không
+            if ($totalRequestedQuantity > $remainingPromotionQuantity) {
+                $availableQuantity = max(0, $remainingPromotionQuantity - $currentCartQuantity);
+                if ($availableQuantity <= 0) {
+                    return back()->with('error', 'Khuyến mãi đã hết số lượng! Chỉ còn ' . $remainingPromotionQuantity . ' sản phẩm được khuyến mãi.');
+                }
+                return back()->with('error', 'Số lượng vượt quá giới hạn khuyến mãi! Bạn chỉ có thể thêm tối đa ' . $availableQuantity . ' sản phẩm nữa.');
+            }
         }
 
         // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
@@ -53,7 +114,7 @@ class CartController extends Controller
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity
             ]);
-            $message = 'Đã thêm sản phẩm vào giỏ hàng!';
+            $message = __('app.product_added_to_cart');
         }
 
         return back()->with('success', $message);
@@ -73,6 +134,17 @@ class CartController extends Controller
         // Kiểm tra tồn kho
         if (!$cart->product->hasStock($request->quantity)) {
             return back()->with('error', 'Số lượng vượt quá tồn kho!');
+        }
+
+        // Kiểm tra khuyến mãi và số lượng khuyến mãi
+        $activePromotion = $cart->product->promotions()->active()->first();
+        if ($activePromotion && $activePromotion->quantity > 0) {
+            $remainingPromotionQuantity = $activePromotion->getRemainingQuantityAttribute();
+            
+            // Kiểm tra xem có vượt quá số lượng khuyến mãi không
+            if ($request->quantity > $remainingPromotionQuantity) {
+                return back()->with('error', 'Số lượng vượt quá giới hạn khuyến mãi! Chỉ còn ' . $remainingPromotionQuantity . ' sản phẩm được khuyến mãi.');
+            }
         }
 
         $cart->update(['quantity' => $request->quantity]);
@@ -104,6 +176,17 @@ class CartController extends Controller
         // Kiểm tra quyền sở hữu
         if ($cart->user_id !== auth()->id()) {
             abort(403);
+        }
+
+        // Kiểm tra khuyến mãi và số lượng khuyến mãi
+        $activePromotion = $cart->product->promotions()->active()->first();
+        if ($activePromotion && $activePromotion->quantity > 0) {
+            $remainingPromotionQuantity = $activePromotion->getRemainingQuantityAttribute();
+            
+            // Kiểm tra xem có vượt quá số lượng khuyến mãi không
+            if ($cart->quantity >= $remainingPromotionQuantity) {
+                return back()->with('error', 'Không thể tăng số lượng! Chỉ còn ' . $remainingPromotionQuantity . ' sản phẩm được khuyến mãi.');
+            }
         }
 
         if ($cart->increaseQuantity()) {

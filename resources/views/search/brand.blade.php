@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Thương hiệu {{ $brand }} - Perfume Luxury')
+@section('title', __('app.brand') . ' {{ $brand }} - Perfume Luxury')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-indigo-50/40 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -19,19 +19,19 @@
                 <!-- Brand Info -->
                 <div class="text-center">
                     <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 dark:from-purple-400 dark:via-purple-300 dark:to-indigo-300 bg-clip-text text-transparent">
-                        Thương hiệu {{ $brand }}
+                        {{ __('app.brand') }} {{ $brand }}
                     </h1>
                     <p class="text-slate-600 dark:text-slate-400 mt-2 px-4 py-2 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl">
-                        Bộ sưu tập nước hoa {{ $brand }}
+                        {{ __('app.luxury_perfume_collection') }} {{ $brand }}
                     </p>
                 </div>
                 
-                <!-- Results Count -->
-                <div class="text-right">
-                    <div class="text-sm text-slate-600 dark:text-slate-400">
-                        Tìm thấy <span class="font-bold text-brand-600">{{ $products->total() }}</span> sản phẩm
-                    </div>
-                </div>
+                                 <!-- Results Count -->
+                 <div class="text-right">
+                     <div class="text-sm text-slate-600 dark:text-slate-400">
+                        {!! __('app.found_products', ['count' => '<span class="font-bold text-brand-600">' . $products->total() . '</span>']) !!}
+                     </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -42,7 +42,10 @@
             <!-- Results Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($products as $product)
-                    @include('partials.product-card', ['product' => $product])
+                    @include('partials.product-card', [
+                        'product' => $product,
+                        'promotionService' => $promotionService
+                    ])
                 @endforeach
             </div>
             
@@ -61,14 +64,14 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
-                    Không có sản phẩm nào
+                    {{ __('app.no_products_found') }}
                 </h3>
                 <p class="text-slate-600 dark:text-slate-400 mb-6">
-                    Thương hiệu {{ $brand }} chưa có sản phẩm nào
+                    {{ __('app.brand') }} {{ $brand }} {{ __('app.no_products_in_category') }}
                 </p>
                 <a href="{{ route('categories.index') }}" 
                    class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-semibold transition-colors">
-                    Về trang chủ
+                    {{ __('app.back_to_home') }}
                 </a>
             </div>
         @endif
